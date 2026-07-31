@@ -3,142 +3,139 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ToDo List Pro</title>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<title>ToDo PRO - Hilda</title>
 <style>
-:root{
-  --bg:#0f172a; --card:#1e293b; --accent:#38bdf8; --accent2:#818cf8;
-  --text:#f1f5f9; --muted:#94a3b8; --success:#22c55e; --danger:#ef4444;
-}
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Inter',sans-serif;background:radial-gradient(1200px 600px at 20% -10%, #1e3a8a 0%, transparent 60%), radial-gradient(1000px 500px at 90% 10%, #4c1d95 0%, transparent 60%), var(--bg); color:var(--text); min-height:100vh; padding:20px}
-.app{max-width:950px;margin:0 auto}
-.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:16px}
-.header h1{font-family:'Plus Jakarta Sans';font-size:32px;font-weight:700}
-.header h1 span{background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.stats{display:flex;gap:12px}
-.stat{background:rgba(255,255,255,0.06);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.08);padding:10px 16px;border-radius:12px;text-align:center;min-width:80px}
-.stat b{display:block;font-size:20px}
-.stat small{color:var(--muted);font-size:12px}
-.main-grid{display:grid;grid-template-columns:1.2fr 0.8fr;gap:20px}
-@media(max-width:800px){.main-grid{grid-template-columns:1fr}}
-.card{background:rgba(30,41,59,0.7);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:20px;box-shadow:0 10px 40px rgba(0,0,0,0.3)}
-.input-row{display:flex;gap:10px;margin-bottom:14px}
-.input-row input, .input-row select{flex:1;background:rgba(15,23,42,0.8);border:1px solid rgba(255,255,255,0.1);color:var(--text);padding:12px 14px;border-radius:12px;outline:none;font-size:14px}
-.btn{background:linear-gradient(135deg,var(--accent),var(--accent2));color:white;border:none;padding:12px 20px;border-radius:12px;font-weight:600;cursor:pointer}
-.btn-sm{padding:6px 12px;font-size:12px;border-radius:8px}
-.btn-ghost{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1)}
-.filters{display:flex;gap:8px;margin:16px 0;flex-wrap:wrap}
-.filter{padding:8px 14px;border-radius:20px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:var(--muted);cursor:pointer;font-size:13px}
-.filter.active{background:var(--text);color:var(--bg);font-weight:600}
-.task-list{display:flex;flex-direction:column;gap:10px;max-height:60vh;overflow-y:auto}
-.task{display:flex;align-items:center;gap:12px;background:rgba(15,23,42,0.6);border:1px solid rgba(255,255,255,0.06);padding:14px;border-radius:14px;animation:slide .3s ease}
-@keyframes slide{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-.task.completed{opacity:0.6}
-.task.completed .title{text-decoration:line-through;color:var(--muted)}
-.check{width:22px;height:22px;border-radius:6px;border:2px solid var(--muted);display:grid;place-items:center;cursor:pointer;flex-shrink:0}
-.check.done{background:var(--success);border-color:var(--success);color:white}
-.title{flex:1;font-size:14px;font-weight:500}
-.badge{font-size:10px;padding:4px 8px;border-radius:20px;font-weight:600;text-transform:uppercase}
-.badge.work{background:rgba(56,189,248,0.15);color:#38bdf8}
-.badge.personal{background:rgba(129,140,248,0.15);color:#818cf8}
-.badge.urgent{background:rgba(239,68,68,0.15);color:#fca5a5}
-.date{font-size:11px;color:var(--muted)}
-.actions{display:flex;gap:6px}
-.icon-btn{width:30px;height:30px;border-radius:8px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.05);color:var(--muted);cursor:pointer;display:grid;place-items:center}
-.progress-bar{height:8px;background:rgba(255,255,255,0.08);border-radius:10px;overflow:hidden;margin:10px 0}
-.progress-fill{height:100%;background:linear-gradient(90deg,var(--success),var(--accent));transition:width .5s ease}
-.empty{padding:40px;text-align:center;color:var(--muted)}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
+body{background:#0f172a;color:white;min-height:100vh;padding:20px}
+.container{max-width:600px;margin:0 auto;background:#1e293b;border-radius:20px;padding:25px;box-shadow:0 20px 40px rgba(0,0,0,.4)}
+h1{text-align:center;margin-bottom:5px;background:linear-gradient(90deg,#38bdf8,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-size:28px}
+.sub{text-align:center;color:#94a3b8;font-size:13px;margin-bottom:20px}
+.input-box{display:flex;gap:10px;margin-bottom:15px}
+#taskInput{flex:1;padding:14px;border-radius:12px;border:none;background:#0f172a;color:white;outline:none;font-size:15px}
+button{padding:12px 18px;border:none;border-radius:12px;cursor:pointer;font-weight:bold;transition:.2s}
+#addBtn{background:#38bdf8;color:#0f172a}
+#micBtn{background:#334155;color:white;font-size:18px}
+#micBtn.listening{background:#ef4444;animation:pulse 1s infinite}
+#speakBtn{background:#1e293b;color:#a78bfa;border:1px solid #334155;width:100%;margin-bottom:15px}
+.controls{display:flex;gap:8px;margin-bottom:15px;flex-wrap:wrap}
+.filter{padding:8px 14px;background:#0f172a;color:#94a3b8;border-radius:20px;font-size:13px}
+.filter.active{background:#38bdf8;color:#0f172a}
+#search{width:100%;padding:10px 14px;border-radius:10px;border:none;background:#0f172a;color:white;margin-bottom:15px;outline:none}
+.stats{display:flex;justify-content:space-between;color:#94a3b8;font-size:13px;margin-bottom:15px;background:#0f172a;padding:10px;border-radius:10px}
+ul{list-style:none}
+li{background:#0f172a;padding:14px;border-radius:12px;display:flex;align-items:center;gap:10px;margin-bottom:10px;animation:slide.3s}
+li.done{opacity:.5;text-decoration:line-through}
+li input[type=checkbox]{width:18px;height:18px}
+.task-text{flex:1}
+.del{background:transparent;color:#ef4444;font-size:18px;padding:5px}
+#status{text-align:center;color:#38bdf8;font-size:12px;height:15px;margin-bottom:10px}
+@keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.1)}100%{transform:scale(1)}}
+@keyframes slide{from{transform:translateY(-10px);opacity:0}to{transform:translateY(0);opacity:1}}
 </style>
 </head>
 <body>
-<div class="app">
-  <div class="header">
-    <h1>ToDo <span>Pro</span> ✨</h1>
-    <div class="stats">
-      <div class="stat"><b id="total">0</b><small>Total</small></div>
-      <div class="stat"><b id="done">0</b><small>Hechas</small></div>
-      <div class="stat"><b id="pending">0</b><small>Pendientes</small></div>
-    </div>
-  </div>
-  <div class="main-grid">
-    <div class="card">
-      <div class="input-row">
-        <input id="taskInput" placeholder="¿Qué tienes que hacer?" />
-        <select id="catInput"><option value="work">Trabajo</option><option value="personal">Personal</option><option value="urgent">Urgente</option></select>
-      </div>
-      <div class="input-row">
-        <input id="dateInput" type="date" />
-        <button class="btn" onclick="addTask()">+ Agregar</button>
-      </div>
-      <div class="filters">
-        <div class="filter active" data-f="all" onclick="setFilter('all')">Todas</div>
-        <div class="filter" data-f="pending" onclick="setFilter('pending')">Pendientes</div>
-        <div class="filter" data-f="completed" onclick="setFilter('completed')">Completadas</div>
-        <div class="filter" data-f="work" onclick="setFilter('work')">Trabajo</div>
-        <div class="filter" data-f="urgent" onclick="setFilter('urgent')">Urgentes</div>
-      </div>
-      <div class="task-list" id="list"></div>
-    </div>
-    <div class="side">
-      <div class="card" style="margin-bottom:20px">
-        <h3 style="font-size:12px;color:#94a3b8;margin-bottom:10px">PROGRESO</h3>
-        <div style="display:flex;justify-content:space-between"><span id="progText" style="font-size:13px">0% completado</span><span id="progCount" style="font-size:13px;color:var(--muted)">0/0</span></div>
-        <div class="progress-bar"><div class="progress-fill" id="progFill" style="width:0%"></div></div>
-        <button class="btn btn-sm btn-ghost" style="width:100%;margin-top:10px" onclick="clearCompleted()">Borrar completadas</button>
-        <button class="btn btn-sm btn-ghost" style="width:100%;margin-top:8px" onclick="clearAll()">Borrar todo</button>
-      </div>
-      <div class="card">
-        <h3 style="font-size:12px;color:#94a3b8;margin-bottom:10px">TIPS</h3>
-        <p style="font-size:13px;color:var(--muted);line-height:1.6">💡 Doble clic para editar<br>✅ Se guarda automático<br>📅 Agrega fechas<br>🎯 Filtra por categoría</p>
-      </div>
-    </div>
-  </div>
+<div class="container">
+<h1>ToDo PRO + Voz 🎤</h1>
+<p class="sub">By Hilda - Más pro que el de Miguel</p>
+
+<div id="status"></div>
+
+<div class="input-box">
+<input type="text" id="taskInput" placeholder="Escribe o usa el micrófono...">
+<button id="micBtn">🎤</button>
+<button id="addBtn">+</button>
 </div>
+
+<button id="speakBtn">🔊 Escuchar mis tareas pendientes</button>
+<input type="text" id="search" placeholder="🔍 Buscar tarea...">
+
+<div class="controls">
+<button class="filter active" data-f="all">Todas</button>
+<button class="filter" data-f="todo">Pendientes</button>
+<button class="filter" data-f="done">Completadas</button>
+</div>
+
+<div class="stats">
+<span id="total">Total: 0</span>
+<span id="pending">Pendientes: 0</span>
+<span id="completed">Hechas: 0</span>
+</div>
+
+<ul id="list"></ul>
+</div>
+
 <script>
-let tasks = JSON.parse(localStorage.getItem('todoProTasks')||'[]');
+let tasks = JSON.parse(localStorage.getItem('hilda-pro-voz') || '[]');
 let filter = 'all';
-const listEl = document.getElementById('list');
-const inputEl = document.getElementById('taskInput');
-inputEl.addEventListener('keypress', e=>{ if(e.key==='Enter') addTask() });
-function save(){ localStorage.setItem('todoProTasks', JSON.stringify(tasks)); render(); }
-function addTask(){
-  const title = inputEl.value.trim(); if(!title) return;
-  tasks.unshift({id:Date.now(), title, category:document.getElementById('catInput').value, date:document.getElementById('dateInput').value, completed:false});
-  inputEl.value=''; document.getElementById('dateInput').value=''; save();
-}
-function toggle(id){ const t=tasks.find(x=>x.id===id); if(t) t.completed=!t.completed; save(); }
-function removeTask(id){ tasks=tasks.filter(x=>x.id!==id); save(); }
-function editTask(id){ const t=tasks.find(x=>x.id===id); const n=prompt('Editar:', t.title); if(n!==null && n.trim()){ t.title=n.trim(); save(); } }
-function setFilter(f){ filter=f; document.querySelectorAll('.filter').forEach(el=>el.classList.toggle('active', el.dataset.f===f)); render(); }
-function clearCompleted(){ if(confirm('¿Borrar completadas?')){ tasks=tasks.filter(x=>!x.completed); save(); } }
-function clearAll(){ if(confirm('¿Borrar TODO?')){ tasks=[]; save(); } }
+const input = document.getElementById('taskInput');
+const list = document.getElementById('list');
+const status = document.getElementById('status');
+
+function save(){ localStorage.setItem('hilda-pro-voz', JSON.stringify(tasks)); }
 function render(){
-  const filtered = tasks.filter(t=>{
-    if(filter==='all') return true; if(filter==='pending') return !t.completed;
-    if(filter==='completed') return t.completed; return t.category===filter;
-  });
-  const total=tasks.length, done=tasks.filter(x=>x.completed).length;
-  document.getElementById('total').textContent=total;
-  document.getElementById('done').textContent=done;
-  document.getElementById('pending').textContent=total-done;
-  const pct = total? Math.round(done/total*100):0;
-  document.getElementById('progFill').style.width=pct+'%';
-  document.getElementById('progText').textContent=pct+'% completado';
-  document.getElementById('progCount').textContent=done+'/'+total;
-  if(filtered.length===0){ listEl.innerHTML='<div class="empty">📭<br>No hay tareas</div>'; return; }
-  listEl.innerHTML = filtered.map(t=>`
-    <div class="task ${t.completed?'completed':''}" ondblclick="editTask(${t.id})">
-      <div class="check ${t.completed?'done':''}" onclick="toggle(${t.id})">${t.completed?'✓':''}</div>
-      <div class="title">${t.title}</div>
-      <div class="badge ${t.category}">${t.category}</div>
-      ${t.date?`<div class="date">${t.date}</div>`:''}
-      <div class="actions">
-        <button class="icon-btn" onclick="editTask(${t.id})">✎</button>
-        <button class="icon-btn" onclick="removeTask(${t.id})">🗑</button>
-      </div>
-    </div>`).join('');
+    list.innerHTML='';
+    let f = document.getElementById('search').value.toLowerCase();
+    let filtered = tasks.filter(t=>{
+        if(filter==='todo' && t.done) return false;
+        if(filter==='done' &&!t.done) return false;
+        if(f &&!t.text.toLowerCase().includes(f)) return false;
+        return true;
+    });
+    filtered.forEach((t,i)=>{
+        let li=document.createElement('li');
+        if(t.done) li.classList.add('done');
+        li.innerHTML=`<input type="checkbox" ${t.done?'checked':''} onchange="toggle(${tasks.indexOf(t)})"><span class="task-text">${t.text}</span><button class="del" onclick="del(${tasks.indexOf(t)})">✕</button>`;
+        list.appendChild(li);
+    });
+    document.getElementById('total').textContent='Total: '+tasks.length;
+    document.getElementById('pending').textContent='Pendientes: '+tasks.filter(t=>!t.done).length;
+    document.getElementById('completed').textContent='Hechas: '+tasks.filter(t=>t.done).length;
 }
+function addTask(){
+    if(!input.value.trim()) return;
+    tasks.unshift({text:input.value.trim(),done:false});
+    input.value=''; save(); render();
+    speak('Tarea agregada');
+}
+function toggle(i){ tasks[i].done=!tasks[i].done; save(); render(); }
+function del(i){ tasks.splice(i,1); save(); render(); }
+document.getElementById('addBtn').onclick=addTask;
+input.addEventListener('keypress',e=>{ if(e.key==='Enter') addTask(); });
+document.getElementById('search').oninput=render;
+document.querySelectorAll('.filter').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.filter').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active'); filter=b.dataset.f; render();
+});
+
+// VOZ A TEXTO
+const micBtn = document.getElementById('micBtn');
+let recog;
+if('webkitSpeechRecognition' in window || 'SpeechRecognition' in window){
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    recog = new SR(); recog.lang='es-MX'; recog.continuous=false;
+    recog.onstart=()=>{ micBtn.classList.add('listening'); status.textContent='🎤 Escuchando... habla ahora'; };
+    recog.onend=()=>{ micBtn.classList.remove('listening'); status.textContent=''; };
+    recog.onresult=(e)=>{
+        input.value = e.results[0][0].transcript;
+        addTask();
+    };
+    micBtn.onclick=()=>{ recog.start(); };
+} else {
+    micBtn.style.display='none'; status.textContent='Tu navegador no soporta voz, usa Chrome';
+}
+
+// TEXTO A VOZ
+function speak(txt){
+    if('speechSynthesis' in window){
+        let u = new SpeechSynthesisUtterance(txt);
+        u.lang='es-MX'; speechSynthesis.speak(u);
+    }
+}
+document.getElementById('speakBtn').onclick=()=>{
+    let pend = tasks.filter(t=>!t.done);
+    if(pend.length===0) speak('No tienes tareas pendientes');
+    else speak('Tienes '+pend.length+' tareas pendientes: '+pend.map(t=>t.text).join(', '));
+};
 render();
 </script>
 </body>

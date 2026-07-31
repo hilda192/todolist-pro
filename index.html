@@ -2,139 +2,161 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ToDo PRO - Hilda</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#0f172a">
+<title>ToDo ULTRA PRO - Hilda</title>
+<link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiVG9EbyBVTFRSQSBQUk8iLCJzaG9ydF9uYW1lIjoiVG9EbyBQcm8iLCJkaXNwbGF5Ijoic3RhbmRhbG9uZSJ9">
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
-body{background:#0f172a;color:white;min-height:100vh;padding:20px}
-.container{max-width:600px;margin:0 auto;background:#1e293b;border-radius:20px;padding:25px;box-shadow:0 20px 40px rgba(0,0,0,.4)}
-h1{text-align:center;margin-bottom:5px;background:linear-gradient(90deg,#38bdf8,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-size:28px}
-.sub{text-align:center;color:#94a3b8;font-size:13px;margin-bottom:20px}
-.input-box{display:flex;gap:10px;margin-bottom:15px}
-#taskInput{flex:1;padding:14px;border-radius:12px;border:none;background:#0f172a;color:white;outline:none;font-size:15px}
-button{padding:12px 18px;border:none;border-radius:12px;cursor:pointer;font-weight:bold;transition:.2s}
-#addBtn{background:#38bdf8;color:#0f172a}
-#micBtn{background:#334155;color:white;font-size:18px}
-#micBtn.listening{background:#ef4444;animation:pulse 1s infinite}
-#speakBtn{background:#1e293b;color:#a78bfa;border:1px solid #334155;width:100%;margin-bottom:15px}
-.controls{display:flex;gap:8px;margin-bottom:15px;flex-wrap:wrap}
-.filter{padding:8px 14px;background:#0f172a;color:#94a3b8;border-radius:20px;font-size:13px}
-.filter.active{background:#38bdf8;color:#0f172a}
-#search{width:100%;padding:10px 14px;border-radius:10px;border:none;background:#0f172a;color:white;margin-bottom:15px;outline:none}
-.stats{display:flex;justify-content:space-between;color:#94a3b8;font-size:13px;margin-bottom:15px;background:#0f172a;padding:10px;border-radius:10px}
-ul{list-style:none}
-li{background:#0f172a;padding:14px;border-radius:12px;display:flex;align-items:center;gap:10px;margin-bottom:10px;animation:slide.3s}
-li.done{opacity:.5;text-decoration:line-through}
-li input[type=checkbox]{width:18px;height:18px}
-.task-text{flex:1}
-.del{background:transparent;color:#ef4444;font-size:18px;padding:5px}
-#status{text-align:center;color:#38bdf8;font-size:12px;height:15px;margin-bottom:10px}
-@keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.1)}100%{transform:scale(1)}}
-@keyframes slide{from{transform:translateY(-10px);opacity:0}to{transform:translateY(0);opacity:1}}
+:root{--bg:#0f172a;--card:#1e293b;--card2:#0f172a;--text:#f1f5f9;--muted:#94a3b8;--primary:#38bdf8;--accent:#a78bfa}
+.light{--bg:#f1f5f9;--card:#ffffff;--card2:#e2e8f0;--text:#0f172a;--muted:#64748b}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',system-ui}
+body{background:var(--bg);color:var(--text);min-height:100vh;padding:12px;transition:.3s}
+.container{max-width:750px;margin:0 auto}
+.header{display:flex;justify-content:space-between;align-items:center;background:var(--card);padding:16px 20px;border-radius:16px;margin-bottom:12px;box-shadow:0 4px 20px rgba(0,0,0,.1)}
+.header h1{font-size:20px;background:linear-gradient(90deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header-actions{display:flex;gap:8px}
+.icon-btn{width:38px;height:38px;border-radius:10px;border:none;background:var(--card2);color:var(--text);font-size:16px;cursor:pointer}
+.main-card{background:var(--card);border-radius:18px;padding:18px;box-shadow:0 10px 30px rgba(0,0,0,.15)}
+.status{height:18px;text-align:center;color:var(--primary);font-size:12px;font-weight:600}
+.input-grid{display:grid;grid-template-columns:1fr auto auto;gap:8px;margin:10px 0}
+@media(max-width:600px){.input-grid{grid-template-columns:1fr auto auto} .extra-grid{grid-template-columns:1fr 1fr!important}}
+.extra-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px}
+.input, .select{padding:13px;border:none;border-radius:12px;background:var(--card2);color:var(--text);outline:none;width:100%;font-size:14px}
+.btn{padding:13px 18px;border:none;border-radius:12px;font-weight:800;cursor:pointer}
+.btn-primary{background:var(--primary);color:#0f172a}
+.btn-mic{background:var(--card2);font-size:18px}
+.btn-mic.listening{background:#ef4444;color:white;animation:pulse 1s infinite}
+.btn-voice{width:100%;background:transparent;border:1px dashed var(--muted);color:var(--accent);margin-bottom:12px;font-size:13px}
+.toolbar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.chip{padding:7px 14px;border-radius:20px;border:none;background:var(--card2);color:var(--muted);font-size:12px;cursor:pointer}
+.chip.active{background:var(--primary);color:#0f172a;font-weight:700}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.stat{background:var(--card2);padding:10px;border-radius:12px;text-align:center}
+.stat b{display:block;font-size:18px;color:var(--primary)}
+.stat span{font-size:11px;color:var(--muted)}
+#search{margin-bottom:12px}
+.task{background:var(--card2);padding:14px;border-radius:14px;display:flex;gap:10px;align-items:flex-start;margin-bottom:8px;border-left:4px solid transparent;animation:pop .25s}
+.task.prio-alta{border-color:#ef4444} .task.prio-media{border-color:#f59e0b} .task.prio-baja{border-color:#10b981}
+.task.done{opacity:.5}
+.task.done .t{ text-decoration:line-through }
+.check{width:20px;height:20px;margin-top:2px}
+.t{flex:1}
+.t-title{font-size:14px;font-weight:600;line-height:1.2}
+.t-meta{font-size:11px;color:var(--muted);margin-top:4px;display:flex;gap:6px;flex-wrap:wrap}
+.badge{padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;color:white}
+.cat-Escuela{background:#8b5cf6} .cat-Casa{background:#06b6d4} .cat-Trabajo{background:#f43f5e} .cat-Personal{background:#10b981}
+.del{ background:none;border:none;color:#ef4444;font-size:18px;cursor:pointer;padding:2px 6px }
+@keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.08)}100%{transform:scale(1)}}
+@keyframes pop{from{transform:scale(.97);opacity:0}to{transform:scale(1);opacity:1}}
+.footer{text-align:center;color:var(--muted);font-size:11px;margin-top:15px}
 </style>
 </head>
 <body>
 <div class="container">
-<h1>ToDo PRO + Voz 🎤</h1>
-<p class="sub">By Hilda - Más pro que el de Miguel</p>
-
-<div id="status"></div>
-
-<div class="input-box">
-<input type="text" id="taskInput" placeholder="Escribe o usa el micrófono...">
-<button id="micBtn">🎤</button>
-<button id="addBtn">+</button>
+<div class="header">
+<h1>ToDo ULTRA PRO 🚀</h1>
+<div class="header-actions">
+<button class="icon-btn" id="themeBtn">🌙</button>
+<button class="icon-btn" id="exportBtn">📤</button>
+</div>
 </div>
 
-<button id="speakBtn">🔊 Escuchar mis tareas pendientes</button>
-<input type="text" id="search" placeholder="🔍 Buscar tarea...">
+<div class="main-card">
+<div class="status" id="status"></div>
 
-<div class="controls">
-<button class="filter active" data-f="all">Todas</button>
-<button class="filter" data-f="todo">Pendientes</button>
-<button class="filter" data-f="done">Completadas</button>
+<div class="input-grid">
+<input id="taskInput" class="input" placeholder="¿Qué harás hoy? Ej: Tarea de mates...">
+<button id="micBtn" class="btn btn-mic">🎤</button>
+<button id="addBtn" class="btn btn-primary">+</button>
+</div>
+
+<div class="extra-grid">
+<select id="cat" class="select"><option value="Escuela">📚 Escuela</option><option value="Casa">🏠 Casa</option><option value="Trabajo">💼 Trabajo</option><option value="Personal">👤 Personal</option></select>
+<select id="prio" class="select"><option value="media">🟡 Media</option><option value="alta">🔴 Alta</option><option value="baja">🟢 Baja</option></select>
+<input id="date" type="date" class="select">
+</div>
+
+<button id="speakBtn" class="btn btn-voice">🔊 Escuchar mis pendientes por voz</button>
+<input id="search" class="input" placeholder="🔍 Buscar...">
+
+<div class="toolbar">
+<button class="chip active" data-f="all">Todas</button>
+<button class="chip" data-f="todo">Pendientes</button>
+<button class="chip" data-f="done">Hechas</button>
+<button class="chip" data-f="alta">🔴 Alta</button>
 </div>
 
 <div class="stats">
-<span id="total">Total: 0</span>
-<span id="pending">Pendientes: 0</span>
-<span id="completed">Hechas: 0</span>
+<div class="stat"><b id="total">0</b><span>Total</span></div>
+<div class="stat"><b id="pending">0</b><span>Pendientes</span></div>
+<div class="stat"><b id="completed">0</b><span>Hechas</span></div>
 </div>
 
-<ul id="list"></ul>
+<div id="list"></div>
+<p class="footer">Hecho por Hilda - Mejor que miguel2352 😉<br>Toca 🎤 y di tu tarea</p>
+</div>
 </div>
 
 <script>
-let tasks = JSON.parse(localStorage.getItem('hilda-pro-voz') || '[]');
-let filter = 'all';
-const input = document.getElementById('taskInput');
-const list = document.getElementById('list');
-const status = document.getElementById('status');
-
-function save(){ localStorage.setItem('hilda-pro-voz', JSON.stringify(tasks)); }
+let tasks=JSON.parse(localStorage.getItem('hilda-ultra')||'[]');
+let filter='all';
+const $=s=>document.getElementById(s);
+let isLight=localStorage.getItem('theme')==='light';
+if(isLight){document.body.classList.add('light'); $('themeBtn').textContent='☀️';}
+function save(){localStorage.setItem('hilda-ultra',JSON.stringify(tasks))}
 function render(){
-    list.innerHTML='';
-    let f = document.getElementById('search').value.toLowerCase();
-    let filtered = tasks.filter(t=>{
-        if(filter==='todo' && t.done) return false;
-        if(filter==='done' &&!t.done) return false;
-        if(f &&!t.text.toLowerCase().includes(f)) return false;
-        return true;
-    });
-    filtered.forEach((t,i)=>{
-        let li=document.createElement('li');
-        if(t.done) li.classList.add('done');
-        li.innerHTML=`<input type="checkbox" ${t.done?'checked':''} onchange="toggle(${tasks.indexOf(t)})"><span class="task-text">${t.text}</span><button class="del" onclick="del(${tasks.indexOf(t)})">✕</button>`;
-        list.appendChild(li);
-    });
-    document.getElementById('total').textContent='Total: '+tasks.length;
-    document.getElementById('pending').textContent='Pendientes: '+tasks.filter(t=>!t.done).length;
-    document.getElementById('completed').textContent='Hechas: '+tasks.filter(t=>t.done).length;
+ let q=$('search').value.toLowerCase();
+ let html='';
+ tasks.filter(t=>{
+  if(filter==='todo'&&t.done) return 0;
+  if(filter==='done'&&!t.done) return 0;
+  if(filter==='alta'&&t.prio!=='alta') return 0;
+  if(q&&!t.text.toLowerCase().includes(q)) return 0;
+  return 1;
+ }).forEach((t)=>{
+  let idx=tasks.indexOf(t);
+  html+=`<div class="task prio-${t.prio} ${t.done?'done':''}">
+  <input type="checkbox" class="check" ${t.done?'checked':''} onchange="toggle(${idx})">
+  <div class="t"><div class="t-title">${t.text}</div><div class="t-meta"><span class="badge cat-${t.cat}">${t.cat}</span><span>${t.date||'Sin fecha'}</span><span>${t.prio.toUpperCase()}</span></div></div>
+  <button class="del" onclick="del(${idx})">✕</button></div>`;
+ });
+ $('list').innerHTML=html||'<p style="text-align:center;color:var(--muted);padding:20px">No hay tareas ✨</p>';
+ $('total').textContent=tasks.length;
+ $('pending').textContent=tasks.filter(t=>!t.done).length;
+ $('completed').textContent=tasks.filter(t=>t.done).length;
 }
-function addTask(){
-    if(!input.value.trim()) return;
-    tasks.unshift({text:input.value.trim(),done:false});
-    input.value=''; save(); render();
-    speak('Tarea agregada');
+window.toggle=i=>{tasks[i].done=!tasks[i].done;save();render()};
+window.del=i=>{tasks.splice(i,1);save();render()};
+function add(){
+ let v=$('taskInput').value.trim(); if(!v) return;
+ tasks.unshift({text:v,cat:$('cat').value,prio:$('prio').value,date:$('date').value,done:false});
+ $('taskInput').value='';save();render();speak('Agregado '+v);
 }
-function toggle(i){ tasks[i].done=!tasks[i].done; save(); render(); }
-function del(i){ tasks.splice(i,1); save(); render(); }
-document.getElementById('addBtn').onclick=addTask;
-input.addEventListener('keypress',e=>{ if(e.key==='Enter') addTask(); });
-document.getElementById('search').oninput=render;
-document.querySelectorAll('.filter').forEach(b=>b.onclick=()=>{
-    document.querySelectorAll('.filter').forEach(x=>x.classList.remove('active'));
-    b.classList.add('active'); filter=b.dataset.f; render();
-});
-
-// VOZ A TEXTO
-const micBtn = document.getElementById('micBtn');
-let recog;
+$('addBtn').onclick=add; $('taskInput').onkeypress=e=>{if(e.key==='Enter')add()};
+$('search').oninput=render;
+document.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{document.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));c.classList.add('active');filter=c.dataset.f;render()});
+$('themeBtn').onclick=()=>{
+ document.body.classList.toggle('light');
+ let l=document.body.classList.contains('light');
+ localStorage.setItem('theme',l?'light':'dark');
+ $('themeBtn').textContent=l?'☀️':'🌙';
+};
+$('exportBtn').onclick=()=>{let d='data:text/plain;charset=utf-8,'+encodeURIComponent(tasks.map(t=>`${t.done?'[x]':'[ ]'} ${t.text} - ${t.cat} - ${t.prio}`).join('\n'));let a=document.createElement('a');a.href=d;a.download='mis-tareas.txt';a.click();};
+// VOZ
+let recog; const mic=$('micBtn'), st=$('status');
 if('webkitSpeechRecognition' in window || 'SpeechRecognition' in window){
-    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-    recog = new SR(); recog.lang='es-MX'; recog.continuous=false;
-    recog.onstart=()=>{ micBtn.classList.add('listening'); status.textContent='🎤 Escuchando... habla ahora'; };
-    recog.onend=()=>{ micBtn.classList.remove('listening'); status.textContent=''; };
-    recog.onresult=(e)=>{
-        input.value = e.results[0][0].transcript;
-        addTask();
-    };
-    micBtn.onclick=()=>{ recog.start(); };
-} else {
-    micBtn.style.display='none'; status.textContent='Tu navegador no soporta voz, usa Chrome';
-}
-
-// TEXTO A VOZ
-function speak(txt){
-    if('speechSynthesis' in window){
-        let u = new SpeechSynthesisUtterance(txt);
-        u.lang='es-MX'; speechSynthesis.speak(u);
-    }
-}
-document.getElementById('speakBtn').onclick=()=>{
-    let pend = tasks.filter(t=>!t.done);
-    if(pend.length===0) speak('No tienes tareas pendientes');
-    else speak('Tienes '+pend.length+' tareas pendientes: '+pend.map(t=>t.text).join(', '));
+ let SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+ recog=new SR(); recog.lang='es-MX';
+ recog.onstart=()=>{mic.classList.add('listening');st.textContent='🎤 Te escucho...';};
+ recog.onend=()=>{mic.classList.remove('listening');st.textContent='';};
+ recog.onresult=e=>{ $('taskInput').value=e.results[0][0].transcript; add(); };
+ mic.onclick=()=>recog.start();
+} else mic.style.display='none';
+function speak(t){if('speechSynthesis' in window){let u=new SpeechSynthesisUtterance(t);u.lang='es-MX';speechSynthesis.speak(u);}}
+$('speakBtn').onclick=()=>{
+ let p=tasks.filter(t=>!t.done);
+ if(!p.length) speak('No tienes pendientes');
+ else speak(`${p.length} pendientes: ${p.slice(0,5).map(t=>t.text).join(', ')}`);
 };
 render();
 </script>

@@ -1,41 +1,26 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mantenimiento PRO - Hilda</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>.card-prioridad-alta{border-left:6px solid #ef4444}.card-prioridad-media{border-left:6px solid #f59e0b}.card-prioridad-baja{border-left:6px solid #10b981}</style>
 </head>
-<body class="bg-gradient-to-br from-slate-900 to-blue-900 min-h-screen text-white">
+<body class="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 min-h-screen text-white">
 <div id="login-screen" class="min-h-screen flex items-center justify-center p-4">
   <div class="bg-white text-gray-800 p-8 rounded-2xl shadow-2xl w-full max-w-md">
-    <h1 class="text-3xl font-bold text-center mb-2 text-blue-600"><i class="fas fa-tools"></i> Mantenimiento PRO</h1>
-    <p class="text-center text-gray-500 mb-6">By Hilda - ISIC</p>
-    <input id="email" type="email" placeholder="Correo" class="w-full p-3 border rounded-lg mb-3">
-    <input id="password" type="password" placeholder="Contraseña" class="w-full p-3 border rounded-lg mb-4">
-    <button onclick="login()" class="w-full bg-blue-600 text-white p-3 rounded-lg font-bold">Entrar / Registrarse</button>
-    <p id="login-error" class="text-red-500 text-sm mt-3 text-center"></p>
+    <div class="text-center mb-6"><div class="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-3"><i class="fas fa-tools text-white text-2xl"></i></div><h1 class="text-3xl font-bold">Mantenimiento PRO</h1><p class="text-gray-500">Sistema Profesional - ISIC</p><p class="text-blue-600 font-bold">By Hilda</p></div>
+    <input id="email" type="email" value="lias21530@isic.edu.mx" placeholder="Correo" class="w-full p-3 border rounded-xl mb-3"><input id="password" type="password" placeholder="Contraseña" class="w-full p-3 border rounded-xl mb-4"><button onclick="login()" class="w-full bg-blue-600 text-white p-3 rounded-xl font-bold">Entrar <i class="fas fa-arrow-right ml-2"></i></button><p id="login-error" class="text-red-500 text-sm mt-3 text-center"></p>
   </div>
 </div>
 <div id="app-screen" class="hidden">
-  <header class="bg-white/10 backdrop-blur p-4 flex justify-between items-center">
-    <h1 class="font-bold text-xl"><i class="fas fa-list-check"></i> Mis Tareas</h1>
-    <div><span id="user-email" class="text-sm mr-3"></span><button onclick="logout()" class="bg-red-500 px-4 py-2 rounded-lg text-sm">Salir</button></div>
-  </header>
-  <main class="p-4 max-w-2xl mx-auto">
-    <div class="bg-white text-gray-800 p-5 rounded-2xl mb-6">
-      <h2 class="font-bold mb-3">Nueva Tarea</h2>
-      <input id="titulo" placeholder="Ej: Programar bomba" class="w-full p-3 border rounded-lg mb-2">
-      <textarea id="descripcion" placeholder="Descripción" class="w-full p-3 border rounded-lg mb-2"></textarea>
-      <div class="flex gap-2 mb-3">
-        <select id="area" class="flex-1 p-3 border rounded-lg"><option>Preventivo</option><option>Correctivo</option><option>Eléctrico</option><option>Mecánico</option></select>
-        <select id="prioridad" class="flex-1 p-3 border rounded-lg"><option value="alta">Alta</option><option value="media">Media</option><option value="baja">Baja</option></select>
-      </div>
-      <button onclick="guardarTarea()" class="w-full bg-green-600 text-white p-3 rounded-lg font-bold">Guardar en la Nube <i class="fas fa-cloud"></i></button>
-      <p id="save-status" class="text-center text-sm mt-2 text-green-600 font-bold"></p>
-    </div>
-    <div id="lista-tareas" class="space-y-3"></div>
+  <header class="bg-white/10 backdrop-blur-md p-4 flex justify-between items-center sticky top-0 z-10"><h1 class="font-bold text-xl"><i class="fas fa-screwdriver-wrench"></i> Mantenimiento PRO</h1><div class="flex items-center gap-3"><span id="user-email" class="text-xs opacity-70 hidden md:block"></span><button onclick="logout()" class="bg-red-500/80 px-3 py-2 rounded-lg text-sm"><i class="fas fa-sign-out"></i></button></div></header>
+  <main class="p-4 max-w-5xl mx-auto">
+    <div class="grid grid-cols-3 gap-3 mb-6"><div class="bg-white/10 p-4 rounded-xl text-center"><p class="text-2xl font-bold" id="stat-total">0</p><p class="text-xs opacity-70">Total</p></div><div class="bg-green-500/20 p-4 rounded-xl text-center"><p class="text-2xl font-bold" id="stat-hechas">0</p><p class="text-xs opacity-70">Hechas</p></div><div class="bg-red-500/20 p-4 rounded-xl text-center"><p class="text-2xl font-bold" id="stat-pend">0</p><p class="text-xs opacity-70">Pendientes</p></div></div>
+    <div class="bg-white text-gray-800 p-5 rounded-2xl mb-6 shadow-xl"><h2 class="font-bold mb-3"><i class="fas fa-plus-circle text-blue-600"></i> Nueva Tarea</h2><div class="grid md:grid-cols-2 gap-3"><input id="titulo" placeholder="Ej: Programar bomba 3:30am" class="p-3 border rounded-xl"><select id="area" class="p-3 border rounded-xl"><option>Preventivo</option><option>Correctivo</option><option>Eléctrico</option><option>Mecánico</option><option>Programación</option></select></div><textarea id="descripcion" placeholder="Detalles..." class="w-full p-3 border rounded-xl mt-3"></textarea><div class="flex gap-3 mt-3"><select id="prioridad" class="flex-1 p-3 border rounded-xl"><option value="alta">🔴 Alta</option><option value="media">🟡 Media</option><option value="baja">🟢 Baja</option></select><button onclick="guardarTarea()" class="flex-1 bg-blue-600 text-white p-3 rounded-xl font-bold"><i class="fas fa-cloud-upload"></i> Guardar</button></div><p id="save-status" class="text-center text-sm mt-2 text-green-600 font-bold"></p></div>
+    <div class="flex gap-2 mb-4 overflow-x-auto"><input id="buscador" oninput="filtrar()" placeholder="🔍 Buscar..." class="flex-1 p-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/50"><select id="filtro-area" onchange="filtrar()" class="p-3 rounded-xl bg-white/10 border border-white/20"><option value="todas">Todas las áreas</option><option>Preventivo</option><option>Correctivo</option><option>Eléctrico</option><option>Mecánico</option><option>Programación</option></select></div>
+    <div id="lista-tareas" class="grid md:grid-cols-2 gap-4"></div>
   </main>
 </div>
 <script type="module">
@@ -53,66 +38,19 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+let todasTareas = [];
 window.login = async () => {
-  const email = document.getElementById('email').value;
-  const pass = document.getElementById('password').value;
-  const errEl = document.getElementById('login-error');
-  errEl.textContent = "Cargando...";
-  try { await signInWithEmailAndPassword(auth, email, pass); errEl.textContent=""; } 
-  catch (e) { 
-    try { await createUserWithEmailAndPassword(auth, email, pass); errEl.textContent=""; }
-    catch (e2) { errEl.textContent = e2.message; }
-  }
+  const email=document.getElementById('email').value, pass=document.getElementById('password').value, errEl=document.getElementById('login-error');
+  errEl.textContent="Cargando..."; try{await signInWithEmailAndPassword(auth,email,pass); errEl.textContent="";}catch(e){try{await createUserWithEmailAndPassword(auth,email,pass); errEl.textContent="";}catch(e2){errEl.textContent=e2.message;}}
 }
-window.logout = () => signOut(auth);
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    document.getElementById('login-screen').classList.add('hidden');
-    document.getElementById('app-screen').classList.remove('hidden');
-    document.getElementById('user-email').textContent = user.email;
-    cargarTareas(user);
-  } else {
-    document.getElementById('login-screen').classList.remove('hidden');
-    document.getElementById('app-screen').classList.add('hidden');
-  }
-});
-function cargarTareas(user){
-  const q = query(collection(db, "tareas"), where("uid", "==", user.uid));
-  onSnapshot(q, (snap) => {
-    let tareas = [];
-    snap.forEach(d => tareas.push({id: d.id, ...d.data()}));
-    tareas.sort((a,b) => (b.creado?.seconds||0) - (a.creado?.seconds||0));
-    const lista = document.getElementById('lista-tareas');
-    if(tareas.length==0){ lista.innerHTML = "<p class='text-center opacity-70'>No hay tareas aún, ¡agrega una!</p>"; return; }
-    lista.innerHTML = tareas.map(t => `
-      <div class="bg-white text-gray-800 p-4 rounded-xl flex justify-between items-start shadow">
-        <div><h3 class="font-bold ${t.completada?'line-through text-gray-400':''}">${t.titulo}</h3><p class="text-sm text-gray-500">${t.descripcion||''}</p><span class="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded">${t.area} - ${t.prioridad}</span></div>
-        <div class="flex gap-2"><button onclick="toggle('${t.id}', ${!t.completada})" class="bg-green-100 p-2 rounded"><i class="fas fa-check"></i></button><button onclick="borrar('${t.id}')" class="bg-red-100 p-2 rounded"><i class="fas fa-trash"></i></button></div>
-      </div>
-    `).join('');
-  });
-}
-window.guardarTarea = async () => {
-  const user = auth.currentUser;
-  const titulo = document.getElementById('titulo').value;
-  if(!titulo) return alert("Escribe un titulo");
-  try {
-    await addDoc(collection(db, "tareas"), {
-      uid: user.uid,
-      titulo: titulo,
-      descripcion: document.getElementById('descripcion').value,
-      area: document.getElementById('area').value,
-      prioridad: document.getElementById('prioridad').value,
-      completada: false,
-      creado: serverTimestamp()
-    });
-    document.getElementById('titulo').value = ""; document.getElementById('descripcion').value = "";
-    document.getElementById('save-status').textContent = "¡Guardado! ✅";
-    setTimeout(()=>document.getElementById('save-status').textContent="", 2000);
-  } catch(e){ alert("Error: "+e.message); }
-}
-window.borrar = async (id) => { if(confirm("¿Borrar?")) await deleteDoc(doc(db, "tareas", id)); }
-window.toggle = async (id, val) => { await updateDoc(doc(db, "tareas", id), {completada: val}); }
+window.logout=()=>signOut(auth);
+onAuthStateChanged(auth,(user)=>{ if(user){document.getElementById('login-screen').classList.add('hidden');document.getElementById('app-screen').classList.remove('hidden');document.getElementById('user-email').textContent=user.email;cargarTareas(user);}else{document.getElementById('login-screen').classList.remove('hidden');document.getElementById('app-screen').classList.add('hidden');}});
+function cargarTareas(user){ const q=query(collection(db,"tareas"),where("uid","==",user.uid)); onSnapshot(q,(snap)=>{todasTareas=[]; snap.forEach(d=>todasTareas.push({id:d.id,...d.data()})); todasTareas.sort((a,b)=>(b.creado?.seconds||0)-(a.creado?.seconds||0)); actualizarStats(); filtrar();});}
+function actualizarStats(){ document.getElementById('stat-total').textContent=todasTareas.length; document.getElementById('stat-hechas').textContent=todasTareas.filter(t=>t.completada).length; document.getElementById('stat-pend').textContent=todasTareas.filter(t=>!t.completada).length;}
+window.filtrar=()=>{ const txt=document.getElementById('buscador').value.toLowerCase(), area=document.getElementById('filtro-area').value; let f=todasTareas.filter(t=>{const okTxt=t.titulo.toLowerCase().includes(txt)||(t.descripcion||'').toLowerCase().includes(txt); const okArea=area==='todas'||t.area===area; return okTxt&&okArea;}); const lista=document.getElementById('lista-tareas'); if(f.length==0){lista.innerHTML="<p class='col-span-2 text-center opacity-60 py-10'>No hay tareas con ese filtro</p>";return;} lista.innerHTML=f.map(t=>`<div class="bg-white text-gray-800 p-4 rounded-2xl shadow-lg card-prioridad-${t.prioridad} ${t.completada?'opacity-60':''}"><div class="flex justify-between items-start mb-2"><span class="text-xs font-bold px-2 py-1 rounded-full ${t.prioridad==='alta'?'bg-red-100 text-red-600':t.prioridad==='media'?'bg-yellow-100 text-yellow-600':'bg-green-100 text-green-600'}">${t.prioridad.toUpperCase()}</span><span class="text-xs bg-gray-100 px-2 py-1 rounded-full">${t.area}</span></div><h3 class="font-bold text-lg ${t.completada?'line-through':''}">${t.titulo}</h3><p class="text-sm text-gray-500 mb-3">${t.descripcion||'Sin descripción'}</p><div class="flex gap-2"><button onclick="toggle('${t.id}',${!t.completada})" class="flex-1 ${t.completada?'bg-gray-200':'bg-green-600 text-white'} p-2 rounded-xl text-sm font-bold">${t.completada?'Deshacer':'<i class="fas fa-check"></i> Hecha'}</button><button onclick="borrar('${t.id}')" class="bg-red-50 text-red-500 p-2 rounded-xl"><i class="fas fa-trash"></i></button></div></div>`).join('');}
+window.guardarTarea=async()=>{const user=auth.currentUser, titulo=document.getElementById('titulo').value; if(!titulo)return alert("Escribe título"); try{await addDoc(collection(db,"tareas"),{uid:user.uid,titulo,descripcion:document.getElementById('descripcion').value,area:document.getElementById('area').value,prioridad:document.getElementById('prioridad').value,completada:false,creado:serverTimestamp()}); document.getElementById('titulo').value="";document.getElementById('descripcion').value="";document.getElementById('save-status').textContent="¡Guardado! ✅"; setTimeout(()=>document.getElementById('save-status').textContent="",2000);}catch(e){alert(e.message);}}
+window.borrar=async(id)=>{if(confirm("¿Borrar?"))await deleteDoc(doc(db,"tareas",id));}
+window.toggle=async(id,val)=>{await updateDoc(doc(db,"tareas",id),{completada:val});}
 </script>
 </body>
 </html>

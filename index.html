@@ -18,7 +18,6 @@
     <p id="login-error" class="text-red-500 text-sm mt-3 text-center"></p>
   </div>
 </div>
-
 <div id="app-screen" class="hidden">
   <header class="bg-white/10 backdrop-blur p-4 flex justify-between items-center">
     <h1 class="font-bold text-xl"><i class="fas fa-list-check"></i> Mis Tareas</h1>
@@ -34,40 +33,26 @@
         <select id="prioridad" class="flex-1 p-3 border rounded-lg"><option value="alta">Alta</option><option value="media">Media</option><option value="baja">Baja</option></select>
       </div>
       <button onclick="guardarTarea()" class="w-full bg-green-600 text-white p-3 rounded-lg font-bold">Guardar en la Nube <i class="fas fa-cloud"></i></button>
-      <p id="save-status" class="text-center text-sm mt-2"></p>
+      <p id="save-status" class="text-center text-sm mt-2 text-green-600 font-bold"></p>
     </div>
     <div id="lista-tareas" class="space-y-3"></div>
   </main>
 </div>
-
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { getFirestore, collection, addDoc, onSnapshot, query, where, deleteDoc, doc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
 const firebaseConfig = {
-  apiKey: "AIzaSyCqP5V7p2p7p7p7p7p7p7p7",
-  authDomain: "mantenimiento--pro.firebaseapp.com",
-  projectId: "mantenimiento--pro",
-  storageBucket: "mantenimiento--pro.appspot.com",
-  messagingSenderId: "123456789",
-  appId: "1:123456789:web:abcdef"
-};
-
-// Tu config real - pegala de Firebase > Configuracion del proyecto > General
-const realConfig = {
-  apiKey: "AIzaSyA3Z7hW2y7X8Ql9p0r1s2t3u4v5w6x7y8z9",
+  apiKey: "AIzaSyAYrcgWLwirpYIVhDccIhWLifzJbk7WHL8",
   authDomain: "mantenimiento--pro.firebaseapp.com",
   projectId: "mantenimiento--pro",
   storageBucket: "mantenimiento--pro.firebasestorage.app",
-  messagingSenderId: "1081234567890",
-  appId: "1:1081234567890:web:abcd1234efgh5678"
+  messagingSenderId: "964410177409",
+  appId: "1:964410177409:web:83bba9aaf3d94c24c60e80"
 };
-
-const app = initializeApp(realConfig);
+const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-
 window.login = async () => {
   const email = document.getElementById('email').value;
   const pass = document.getElementById('password').value;
@@ -79,7 +64,6 @@ window.login = async () => {
   }
 }
 window.logout = () => signOut(auth);
-
 onAuthStateChanged(auth, (user) => {
   if (user) {
     document.getElementById('login-screen').classList.add('hidden');
@@ -91,7 +75,6 @@ onAuthStateChanged(auth, (user) => {
     document.getElementById('app-screen').classList.add('hidden');
   }
 });
-
 function cargarTareas(user){
   const q = query(collection(db, "tareas"), where("uid", "==", user.uid));
   onSnapshot(q, (snap) => {
@@ -99,16 +82,15 @@ function cargarTareas(user){
     snap.forEach(d => tareas.push({id: d.id, ...d.data()}));
     tareas.sort((a,b) => (b.creado?.seconds||0) - (a.creado?.seconds||0));
     const lista = document.getElementById('lista-tareas');
-    if(tareas.length==0){ lista.innerHTML = "<p class='text-center opacity-70'>No hay tareas aún</p>"; return; }
+    if(tareas.length==0){ lista.innerHTML = "<p class='text-center opacity-70'>No hay tareas aún, ¡agrega una!</p>"; return; }
     lista.innerHTML = tareas.map(t => `
-      <div class="bg-white text-gray-800 p-4 rounded-xl flex justify-between items-start">
-        <div><h3 class="font-bold ${t.completada?'line-through':''}">${t.titulo}</h3><p class="text-sm text-gray-500">${t.descripcion||''}</p><span class="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded">${t.area} - ${t.prioridad}</span></div>
+      <div class="bg-white text-gray-800 p-4 rounded-xl flex justify-between items-start shadow">
+        <div><h3 class="font-bold ${t.completada?'line-through text-gray-400':''}">${t.titulo}</h3><p class="text-sm text-gray-500">${t.descripcion||''}</p><span class="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded">${t.area} - ${t.prioridad}</span></div>
         <div class="flex gap-2"><button onclick="toggle('${t.id}', ${!t.completada})" class="bg-green-100 p-2 rounded"><i class="fas fa-check"></i></button><button onclick="borrar('${t.id}')" class="bg-red-100 p-2 rounded"><i class="fas fa-trash"></i></button></div>
       </div>
     `).join('');
   }, (error) => { console.error(error); document.getElementById('lista-tareas').innerHTML = "Error: "+error.message; });
 }
-
 window.guardarTarea = async () => {
   const user = auth.currentUser;
   const titulo = document.getElementById('titulo').value;

@@ -2,162 +2,112 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<meta name="theme-color" content="#0f172a">
-<title>ToDo ULTRA PRO - Hilda</title>
-<link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiVG9EbyBVTFRSQSBQUk8iLCJzaG9ydF9uYW1lIjoiVG9EbyBQcm8iLCJkaXNwbGF5Ijoic3RhbmRhbG9uZSJ9">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#f59e0b">
+<title>ToDo Mantenimiento PRO - Hilda</title>
 <style>
-:root{--bg:#0f172a;--card:#1e293b;--card2:#0f172a;--text:#f1f5f9;--muted:#94a3b8;--primary:#38bdf8;--accent:#a78bfa}
+:root{--bg:#0f172a;--card:#1e293b;--card2:#111b2f;--text:#f1f5f9;--muted:#94a3b8;--primary:#f59e0b;--accent:#38bdf8;--danger:#ef4444;--ok:#10b981}
 .light{--bg:#f1f5f9;--card:#ffffff;--card2:#e2e8f0;--text:#0f172a;--muted:#64748b}
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',system-ui}
-body{background:var(--bg);color:var(--text);min-height:100vh;padding:12px;transition:.3s}
-.container{max-width:750px;margin:0 auto}
-.header{display:flex;justify-content:space-between;align-items:center;background:var(--card);padding:16px 20px;border-radius:16px;margin-bottom:12px;box-shadow:0 4px 20px rgba(0,0,0,.1)}
-.header h1{font-size:20px;background:linear-gradient(90deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.header-actions{display:flex;gap:8px}
-.icon-btn{width:38px;height:38px;border-radius:10px;border:none;background:var(--card2);color:var(--text);font-size:16px;cursor:pointer}
-.main-card{background:var(--card);border-radius:18px;padding:18px;box-shadow:0 10px 30px rgba(0,0,0,.15)}
-.status{height:18px;text-align:center;color:var(--primary);font-size:12px;font-weight:600}
-.input-grid{display:grid;grid-template-columns:1fr auto auto;gap:8px;margin:10px 0}
-@media(max-width:600px){.input-grid{grid-template-columns:1fr auto auto} .extra-grid{grid-template-columns:1fr 1fr!important}}
-.extra-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px}
-.input, .select{padding:13px;border:none;border-radius:12px;background:var(--card2);color:var(--text);outline:none;width:100%;font-size:14px}
-.btn{padding:13px 18px;border:none;border-radius:12px;font-weight:800;cursor:pointer}
-.btn-primary{background:var(--primary);color:#0f172a}
-.btn-mic{background:var(--card2);font-size:18px}
-.btn-mic.listening{background:#ef4444;color:white;animation:pulse 1s infinite}
-.btn-voice{width:100%;background:transparent;border:1px dashed var(--muted);color:var(--accent);margin-bottom:12px;font-size:13px}
-.toolbar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
-.chip{padding:7px 14px;border-radius:20px;border:none;background:var(--card2);color:var(--muted);font-size:12px;cursor:pointer}
-.chip.active{background:var(--primary);color:#0f172a;font-weight:700}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+body{background:var(--bg);color:var(--text);min-height:100vh;padding:12px}
+.container{max-width:800px;margin:0 auto}
+.header{display:flex;justify-content:space-between;align-items:center;background:var(--card);padding:16px;border-radius:16px;margin-bottom:12px}
+.header h1{font-size:19px}.header span{color:var(--primary)}
+.icon-btn{width:38px;height:38px;border-radius:10px;border:none;background:var(--card2);color:var(--text);cursor:pointer}
+.card{background:var(--card);border-radius:18px;padding:18px;margin-bottom:12px;box-shadow:0 8px 30px rgba(0,0,0,.2)}
+.input,.select, textarea{width:100%;padding:12px;border:none;border-radius:12px;background:var(--card2);color:var(--text);outline:none;margin-bottom:8px;font-size:14px}
+textarea{resize:none;height:60px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+@media(max-width:600px){.grid2,.grid3{grid-template-columns:1fr 1fr}}
+.btn{padding:12px;border:none;border-radius:12px;font-weight:800;cursor:pointer}
+.btn-primary{background:var(--primary);color:#000;width:100%}
+.btn-ghost{background:var(--card2);color:var(--text)}
+.chip{padding:6px 12px;border-radius:20px;border:none;background:var(--card2);color:var(--muted);font-size:12px;cursor:pointer}
+.chip.active{background:var(--primary);color:#000;font-weight:700}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0}
 .stat{background:var(--card2);padding:10px;border-radius:12px;text-align:center}
-.stat b{display:block;font-size:18px;color:var(--primary)}
-.stat span{font-size:11px;color:var(--muted)}
-#search{margin-bottom:12px}
-.task{background:var(--card2);padding:14px;border-radius:14px;display:flex;gap:10px;align-items:flex-start;margin-bottom:8px;border-left:4px solid transparent;animation:pop .25s}
-.task.prio-alta{border-color:#ef4444} .task.prio-media{border-color:#f59e0b} .task.prio-baja{border-color:#10b981}
-.task.done{opacity:.5}
-.task.done .t{ text-decoration:line-through }
-.check{width:20px;height:20px;margin-top:2px}
-.t{flex:1}
-.t-title{font-size:14px;font-weight:600;line-height:1.2}
-.t-meta{font-size:11px;color:var(--muted);margin-top:4px;display:flex;gap:6px;flex-wrap:wrap}
+.stat b{font-size:18px;display:block}.stat span{font-size:11px;color:var(--muted)}
+.task{background:var(--card2);padding:14px;border-radius:14px;margin-bottom:10px;border-left:4px solid var(--primary);display:flex;gap:10px}
+.task.preventivo{border-color:var(--ok)}.task.correctivo{border-color:var(--danger)}.task.vencida{outline:1px solid var(--danger)}
+.t{flex:1}.t-title{font-weight:700;font-size:14px}.t-desc{font-size:12px;color:var(--muted);margin-top:4px}
+.t-meta{font-size:11px;color:var(--muted);margin-top:6px;display:flex;gap:6px;flex-wrap:wrap}
 .badge{padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;color:white}
-.cat-Escuela{background:#8b5cf6} .cat-Casa{background:#06b6d4} .cat-Trabajo{background:#f43f5e} .cat-Personal{background:#10b981}
-.del{ background:none;border:none;color:#ef4444;font-size:18px;cursor:pointer;padding:2px 6px }
-@keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.08)}100%{transform:scale(1)}}
-@keyframes pop{from{transform:scale(.97);opacity:0}to{transform:scale(1);opacity:1}}
-.footer{text-align:center;color:var(--muted);font-size:11px;margin-top:15px}
+.img-prev{width:60px;height:60px;object-fit:cover;border-radius:10px;margin-top:6px}
+.del{border:none;background:none;color:var(--danger);font-size:18px;cursor:pointer}
+.footer{text-align:center;color:var(--muted);font-size:11px;margin-top:10px}
 </style>
 </head>
 <body>
 <div class="container">
-<div class="header">
-<h1>ToDo ULTRA PRO 🚀</h1>
-<div class="header-actions">
-<button class="icon-btn" id="themeBtn">🌙</button>
-<button class="icon-btn" id="exportBtn">📤</button>
-</div>
-</div>
+<div class="header"><h1>🔧 ToDo <span>MANTENIMIENTO PRO</span></h1><div><button class="icon-btn" id="themeBtn">🌙</button><button class="icon-btn" id="pdfBtn">📄</button></div></div>
 
-<div class="main-card">
-<div class="status" id="status"></div>
-
-<div class="input-grid">
-<input id="taskInput" class="input" placeholder="¿Qué harás hoy? Ej: Tarea de mates...">
-<button id="micBtn" class="btn btn-mic">🎤</button>
-<button id="addBtn" class="btn btn-primary">+</button>
+<div class="card">
+<h3 style="font-size:14px;margin-bottom:10px">Nueva tarea de mantenimiento</h3>
+<input id="title" class="input" placeholder="Ej: Limpieza de proyector AULA 3">
+<textarea id="desc" placeholder="Falla / Trabajo realizado..."></textarea>
+<div class="grid3">
+<select id="tipo" class="select"><option value="preventivo">✅ Preventivo</option><option value="correctivo">🚨 Correctivo</option></select>
+<select id="cat" class="select"><option value="Escuela">📚 Escuela</option><option value="Casa">🏠 Casa</option><option value="Trabajo">💼 Trabajo</option><option value="Mantenimiento">🔧 Equipo</option></select>
+<select id="prio" class="select"><option value="alta">🔴 Alta</option><option value="media">🟡 Media</option><option value="baja">🟢 Baja</option></select>
 </div>
-
-<div class="extra-grid">
-<select id="cat" class="select"><option value="Escuela">📚 Escuela</option><option value="Casa">🏠 Casa</option><option value="Trabajo">💼 Trabajo</option><option value="Personal">👤 Personal</option></select>
-<select id="prio" class="select"><option value="media">🟡 Media</option><option value="alta">🔴 Alta</option><option value="baja">🟢 Baja</option></select>
-<input id="date" type="date" class="select">
+<div class="grid2">
+<input id="date" type="date" class="select"><input id="rec" type="number" class="select" placeholder="Recurrencia días (ej: 30)">
+</div>
+<input id="foto" type="file" accept="image/*" capture="environment" class="select">
+<button id="addBtn" class="btn btn-primary">+ AGREGAR TAREA</button>
 </div>
 
-<button id="speakBtn" class="btn btn-voice">🔊 Escuchar mis pendientes por voz</button>
-<input id="search" class="input" placeholder="🔍 Buscar...">
-
-<div class="toolbar">
-<button class="chip active" data-f="all">Todas</button>
-<button class="chip" data-f="todo">Pendientes</button>
-<button class="chip" data-f="done">Hechas</button>
-<button class="chip" data-f="alta">🔴 Alta</button>
+<div class="card">
+<input id="search" class="input" placeholder="🔍 Buscar equipo o falla...">
+<div style="display:flex;gap:6px;flex-wrap:wrap;margin:10px 0">
+<button class="chip active" data-f="all">Todas</button><button class="chip" data-f="todo">Pendientes</button><button class="chip" data-f="vencida">Vencidas</button><button class="chip" data-f="preventivo">Preventivo</button><button class="chip" data-f="correctivo">Correctivo</button>
 </div>
-
-<div class="stats">
-<div class="stat"><b id="total">0</b><span>Total</span></div>
-<div class="stat"><b id="pending">0</b><span>Pendientes</span></div>
-<div class="stat"><b id="completed">0</b><span>Hechas</span></div>
-</div>
-
+<div class="stats"><div class="stat"><b id="total">0</b><span>Total</span></div><div class="stat"><b id="pend">0</b><span>Pendientes</span></div><div class="stat"><b id="prev">0</b><span>Preventivo</span></div><div class="stat"><b id="corr">0</b><span>Correctivo</span></div></div>
 <div id="list"></div>
-<p class="footer">Hecho por Hilda - Mejor que miguel2352 😉<br>Toca 🎤 y di tu tarea</p>
 </div>
+<p class="footer">Hecho por Hilda - Sistema de Mantenimiento PRO V3<br>Supera a miguel2352</p>
 </div>
 
 <script>
-let tasks=JSON.parse(localStorage.getItem('hilda-ultra')||'[]');
-let filter='all';
-const $=s=>document.getElementById(s);
-let isLight=localStorage.getItem('theme')==='light';
-if(isLight){document.body.classList.add('light'); $('themeBtn').textContent='☀️';}
-function save(){localStorage.setItem('hilda-ultra',JSON.stringify(tasks))}
+let tasks=JSON.parse(localStorage.getItem('hilda-mant-pro')||'[]');
+let filter='all'; const $=s=>document.getElementById(s);
+function save(){localStorage.setItem('hilda-mant-pro',JSON.stringify(tasks))}
+function daysLeft(d){if(!d) return null; let a=new Date(); a.setHours(0,0,0,0); return Math.ceil((new Date(d)-a)/86400000)}
+async function fileToBase64(f){return new Promise(r=>{let rd=new FileReader(); rd.onload=()=>r(rd.result); rd.readAsDataURL(f)})}
 function render(){
  let q=$('search').value.toLowerCase();
- let html='';
- tasks.filter(t=>{
-  if(filter==='todo'&&t.done) return 0;
-  if(filter==='done'&&!t.done) return 0;
-  if(filter==='alta'&&t.prio!=='alta') return 0;
-  if(q&&!t.text.toLowerCase().includes(q)) return 0;
-  return 1;
- }).forEach((t)=>{
-  let idx=tasks.indexOf(t);
-  html+=`<div class="task prio-${t.prio} ${t.done?'done':''}">
-  <input type="checkbox" class="check" ${t.done?'checked':''} onchange="toggle(${idx})">
-  <div class="t"><div class="t-title">${t.text}</div><div class="t-meta"><span class="badge cat-${t.cat}">${t.cat}</span><span>${t.date||'Sin fecha'}</span><span>${t.prio.toUpperCase()}</span></div></div>
-  <button class="del" onclick="del(${idx})">✕</button></div>`;
+ let arr=tasks.map((t,i)=>({...t,_i:i})).filter(t=>{
+  if(filter==='todo'&&t.done) return 0; if(filter==='vencida'&&!(daysLeft(t.date)<0&&!t.done)) return 0;
+  if(filter==='preventivo'&&t.tipo!=='preventivo') return 0; if(filter==='correctivo'&&t.tipo!=='correctivo') return 0;
+  if(q&&!(t.title.toLowerCase().includes(q)||(t.desc||'').toLowerCase().includes(q))) return 0; return 1;
+ }).sort((a,b)=>{if(a.done!==b.done) return a.done?1:-1; let p={alta:0,media:1,baja:2}; if(p[a.prio]!==p[b.prio]) return p[a.prio]-p[b.prio]; return 0});
+ let h=''; arr.forEach(t=>{
+  let dl=daysLeft(t.date); let venc=dl!==null&&dl<0&&!t.done;
+  h+=`<div class="task ${t.tipo} ${venc?'vencida':''} ${t.done?'done':''}" style="opacity:${t.done?.5:1}"><input type="checkbox" ${t.done?'checked':''} onchange="toggle(${t._i})" style="margin-top:4px"><div class="t"><div class="t-title">${t.title}</div><div class="t-desc">${t.desc||''}</div>${t.img?`<img src="${t.img}" class="img-prev">`:''}<div class="t-meta"><span class="badge" style="background:${t.tipo==='preventivo'?'#10b981':'#ef4444'}">${t.tipo.toUpperCase()}</span><span class="badge" style="background:#334155">${t.cat}</span><span>${t.date||'Sin fecha'}${dl!==null?(venc?` ⚠️ ${Math.abs(dl)}d atraso`:` (${dl}d)`):''}</span><span>${t.prio.toUpperCase()}</span>${t.rec?`<span>🔁 ${t.rec}d</span>`:''}</div></div><button class="del" onclick="del(${t._i})">✕</button></div>`
  });
- $('list').innerHTML=html||'<p style="text-align:center;color:var(--muted);padding:20px">No hay tareas ✨</p>';
- $('total').textContent=tasks.length;
- $('pending').textContent=tasks.filter(t=>!t.done).length;
- $('completed').textContent=tasks.filter(t=>t.done).length;
+ $('list').innerHTML=h||'<p style="text-align:center;color:var(--muted);padding:20px">Sin tareas</p>';
+ $('total').textContent=tasks.length; $('pend').textContent=tasks.filter(t=>!t.done).length; $('prev').textContent=tasks.filter(t=>t.tipo==='preventivo').length; $('corr').textContent=tasks.filter(t=>t.tipo==='correctivo').length;
 }
-window.toggle=i=>{tasks[i].done=!tasks[i].done;save();render()};
-window.del=i=>{tasks.splice(i,1);save();render()};
-function add(){
- let v=$('taskInput').value.trim(); if(!v) return;
- tasks.unshift({text:v,cat:$('cat').value,prio:$('prio').value,date:$('date').value,done:false});
- $('taskInput').value='';save();render();speak('Agregado '+v);
+window.toggle=i=>{
+ if(!tasks[i].done && tasks[i].rec){ let d=new Date(); d.setDate(d.getDate()+parseInt(tasks[i].rec)); tasks.push({...tasks[i],date:d.toISOString().split('T')[0],done:false})}
+ tasks[i].done=!tasks[i].done; save(); render();
 }
-$('addBtn').onclick=add; $('taskInput').onkeypress=e=>{if(e.key==='Enter')add()};
-$('search').oninput=render;
+window.del=i=>{if(confirm('¿Borrar?')){tasks.splice(i,1);save();render()}}
+$('addBtn').onclick=async()=>{
+ let title=$('title').value.trim(); if(!title) return alert('Pon título');
+ let img=''; if($('foto').files[0]) img=await fileToBase64($('foto').files[0]);
+ tasks.unshift({title,desc:$('desc').value,tipo:$('tipo').value,cat:$('cat').value,prio:$('prio').value,date:$('date').value,rec:$('rec').value,img,done:false,created:new Date().toLocaleString()});
+ $('title').value=''; $('desc').value=''; $('foto').value=''; save(); render();
+}
 document.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{document.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));c.classList.add('active');filter=c.dataset.f;render()});
-$('themeBtn').onclick=()=>{
- document.body.classList.toggle('light');
- let l=document.body.classList.contains('light');
- localStorage.setItem('theme',l?'light':'dark');
- $('themeBtn').textContent=l?'☀️':'🌙';
-};
-$('exportBtn').onclick=()=>{let d='data:text/plain;charset=utf-8,'+encodeURIComponent(tasks.map(t=>`${t.done?'[x]':'[ ]'} ${t.text} - ${t.cat} - ${t.prio}`).join('\n'));let a=document.createElement('a');a.href=d;a.download='mis-tareas.txt';a.click();};
-// VOZ
-let recog; const mic=$('micBtn'), st=$('status');
-if('webkitSpeechRecognition' in window || 'SpeechRecognition' in window){
- let SR=window.SpeechRecognition||window.webkitSpeechRecognition;
- recog=new SR(); recog.lang='es-MX';
- recog.onstart=()=>{mic.classList.add('listening');st.textContent='🎤 Te escucho...';};
- recog.onend=()=>{mic.classList.remove('listening');st.textContent='';};
- recog.onresult=e=>{ $('taskInput').value=e.results[0][0].transcript; add(); };
- mic.onclick=()=>recog.start();
-} else mic.style.display='none';
-function speak(t){if('speechSynthesis' in window){let u=new SpeechSynthesisUtterance(t);u.lang='es-MX';speechSynthesis.speak(u);}}
-$('speakBtn').onclick=()=>{
- let p=tasks.filter(t=>!t.done);
- if(!p.length) speak('No tienes pendientes');
- else speak(`${p.length} pendientes: ${p.slice(0,5).map(t=>t.text).join(', ')}`);
-};
+$('search').oninput=render;
+$('themeBtn').onclick=()=>{document.body.classList.toggle('light');localStorage.setItem('theme',document.body.classList.contains('light')?'light':'dark')}
+$('pdfBtn').onclick=()=>{
+ let w=window.open('','','width=800,height=600'); let rows=tasks.map(t=>`<tr><td>${t.title}</td><td>${t.tipo}</td><td>${t.cat}</td><td>${t.date||''}</td><td>${t.done?'HECHA':'PENDIENTE'}</td><td>${t.desc||''}</td></tr>`).join('');
+ w.document.write(`<h2>Reporte Mantenimiento - Hilda</h2><p>${new Date().toLocaleString()}</p><table border=1 cellpadding=6 cellspacing=0 style="width:100%;font-size:12px"><tr><th>Tarea</th><th>Tipo</th><th>Cat</th><th>Fecha</th><th>Estado</th><th>Notas</th></tr>${rows}</table>`);
+ w.document.close(); w.print();
+}
+if(localStorage.getItem('theme')==='light'){document.body.classList.add('light')}
 render();
 </script>
 </body>

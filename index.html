@@ -13,7 +13,7 @@
     <h1 class="text-3xl font-bold text-center mb-2 text-blue-600"><i class="fas fa-tools"></i> Mantenimiento PRO</h1>
     <p class="text-center text-gray-500 mb-6">By Hilda - ISIC</p>
     <input id="email" type="email" placeholder="Correo" class="w-full p-3 border rounded-lg mb-3">
-    <input id="password" type="password" placeholder="Contraseña (6 letras)" class="w-full p-3 border rounded-lg mb-4">
+    <input id="password" type="password" placeholder="Contraseña" class="w-full p-3 border rounded-lg mb-4">
     <button onclick="login()" class="w-full bg-blue-600 text-white p-3 rounded-lg font-bold">Entrar / Registrarse</button>
     <p id="login-error" class="text-red-500 text-sm mt-3 text-center"></p>
   </div>
@@ -43,12 +43,12 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { getFirestore, collection, addDoc, onSnapshot, query, where, deleteDoc, doc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 const firebaseConfig = {
-  apiKey: "AIzaSyAYrcgWLwirpYIVhDccIhWLifzJbk7WHL8",
+  apiKey: "AIzaSyAYr6gWLwirpYIvHDccIhWLifz3bk7WHl8",
   authDomain: "mantenimiento--pro.firebaseapp.com",
   projectId: "mantenimiento--pro",
   storageBucket: "mantenimiento--pro.firebasestorage.app",
-  messagingSenderId: "964410177409",
-  appId: "1:964410177409:web:83bba9aaf3d94c24c60e80"
+  messagingSenderId: "954410177409",
+  appId: "1:954410177409:web:83bba9aaf3d94c24c50e80"
 };
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -57,9 +57,10 @@ window.login = async () => {
   const email = document.getElementById('email').value;
   const pass = document.getElementById('password').value;
   const errEl = document.getElementById('login-error');
-  try { await signInWithEmailAndPassword(auth, email, pass); } 
+  errEl.textContent = "Cargando...";
+  try { await signInWithEmailAndPassword(auth, email, pass); errEl.textContent=""; } 
   catch (e) { 
-    try { await createUserWithEmailAndPassword(auth, email, pass); }
+    try { await createUserWithEmailAndPassword(auth, email, pass); errEl.textContent=""; }
     catch (e2) { errEl.textContent = e2.message; }
   }
 }
@@ -89,7 +90,7 @@ function cargarTareas(user){
         <div class="flex gap-2"><button onclick="toggle('${t.id}', ${!t.completada})" class="bg-green-100 p-2 rounded"><i class="fas fa-check"></i></button><button onclick="borrar('${t.id}')" class="bg-red-100 p-2 rounded"><i class="fas fa-trash"></i></button></div>
       </div>
     `).join('');
-  }, (error) => { console.error(error); document.getElementById('lista-tareas').innerHTML = "Error: "+error.message; });
+  });
 }
 window.guardarTarea = async () => {
   const user = auth.currentUser;
@@ -106,9 +107,9 @@ window.guardarTarea = async () => {
       creado: serverTimestamp()
     });
     document.getElementById('titulo').value = ""; document.getElementById('descripcion').value = "";
-    document.getElementById('save-status').textContent = "¡Guardado en la nube! ✅";
+    document.getElementById('save-status').textContent = "¡Guardado! ✅";
     setTimeout(()=>document.getElementById('save-status').textContent="", 2000);
-  } catch(e){ alert("Error al guardar: "+e.message); }
+  } catch(e){ alert("Error: "+e.message); }
 }
 window.borrar = async (id) => { if(confirm("¿Borrar?")) await deleteDoc(doc(db, "tareas", id)); }
 window.toggle = async (id, val) => { await updateDoc(doc(db, "tareas", id), {completada: val}); }

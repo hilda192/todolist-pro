@@ -3,112 +3,152 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#f59e0b">
-<title>ToDo Mantenimiento PRO - Hilda</title>
-<style>
-:root{--bg:#0f172a;--card:#1e293b;--card2:#111b2f;--text:#f1f5f9;--muted:#94a3b8;--primary:#f59e0b;--accent:#38bdf8;--danger:#ef4444;--ok:#10b981}
-.light{--bg:#f1f5f9;--card:#ffffff;--card2:#e2e8f0;--text:#0f172a;--muted:#64748b}
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',system-ui}
-body{background:var(--bg);color:var(--text);min-height:100vh;padding:12px}
-.container{max-width:800px;margin:0 auto}
-.header{display:flex;justify-content:space-between;align-items:center;background:var(--card);padding:16px;border-radius:16px;margin-bottom:12px}
-.header h1{font-size:19px}.header span{color:var(--primary)}
-.icon-btn{width:38px;height:38px;border-radius:10px;border:none;background:var(--card2);color:var(--text);cursor:pointer}
-.card{background:var(--card);border-radius:18px;padding:18px;margin-bottom:12px;box-shadow:0 8px 30px rgba(0,0,0,.2)}
-.input,.select, textarea{width:100%;padding:12px;border:none;border-radius:12px;background:var(--card2);color:var(--text);outline:none;margin-bottom:8px;font-size:14px}
-textarea{resize:none;height:60px}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
-@media(max-width:600px){.grid2,.grid3{grid-template-columns:1fr 1fr}}
-.btn{padding:12px;border:none;border-radius:12px;font-weight:800;cursor:pointer}
-.btn-primary{background:var(--primary);color:#000;width:100%}
-.btn-ghost{background:var(--card2);color:var(--text)}
-.chip{padding:6px 12px;border-radius:20px;border:none;background:var(--card2);color:var(--muted);font-size:12px;cursor:pointer}
-.chip.active{background:var(--primary);color:#000;font-weight:700}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0}
-.stat{background:var(--card2);padding:10px;border-radius:12px;text-align:center}
-.stat b{font-size:18px;display:block}.stat span{font-size:11px;color:var(--muted)}
-.task{background:var(--card2);padding:14px;border-radius:14px;margin-bottom:10px;border-left:4px solid var(--primary);display:flex;gap:10px}
-.task.preventivo{border-color:var(--ok)}.task.correctivo{border-color:var(--danger)}.task.vencida{outline:1px solid var(--danger)}
-.t{flex:1}.t-title{font-weight:700;font-size:14px}.t-desc{font-size:12px;color:var(--muted);margin-top:4px}
-.t-meta{font-size:11px;color:var(--muted);margin-top:6px;display:flex;gap:6px;flex-wrap:wrap}
-.badge{padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;color:white}
-.img-prev{width:60px;height:60px;object-fit:cover;border-radius:10px;margin-top:6px}
-.del{border:none;background:none;color:var(--danger);font-size:18px;cursor:pointer}
-.footer{text-align:center;color:var(--muted);font-size:11px;margin-top:10px}
-</style>
-</head>
-<body>
-<div class="container">
-<div class="header"><h1>🔧 ToDo <span>MANTENIMIENTO PRO</span></h1><div><button class="icon-btn" id="themeBtn">🌙</button><button class="icon-btn" id="pdfBtn">📄</button></div></div>
+<title>Mantenimiento PRO - ToDoList</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc, query, where, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-<div class="card">
-<h3 style="font-size:14px;margin-bottom:10px">Nueva tarea de mantenimiento</h3>
-<input id="title" class="input" placeholder="Ej: Limpieza de proyector AULA 3">
-<textarea id="desc" placeholder="Falla / Trabajo realizado..."></textarea>
-<div class="grid3">
-<select id="tipo" class="select"><option value="preventivo">✅ Preventivo</option><option value="correctivo">🚨 Correctivo</option></select>
-<select id="cat" class="select"><option value="Escuela">📚 Escuela</option><option value="Casa">🏠 Casa</option><option value="Trabajo">💼 Trabajo</option><option value="Mantenimiento">🔧 Equipo</option></select>
-<select id="prio" class="select"><option value="alta">🔴 Alta</option><option value="media">🟡 Media</option><option value="baja">🟢 Baja</option></select>
-</div>
-<div class="grid2">
-<input id="date" type="date" class="select"><input id="rec" type="number" class="select" placeholder="Recurrencia días (ej: 30)">
-</div>
-<input id="foto" type="file" accept="image/*" capture="environment" class="select">
-<button id="addBtn" class="btn btn-primary">+ AGREGAR TAREA</button>
-</div>
+const firebaseConfig = {
+  apiKey: "AIzaSyAYr6gWLwirpYIvHDccIhWLifz3bk7WHl8",
+  authDomain: "mantenimiento--pro.firebaseapp.com",
+  projectId: "mantenimiento--pro",
+  storageBucket: "mantenimiento--pro.firebasestorage.app",
+  messagingSenderId: "954410177409",
+  appId: "1:954410177409:web:83bba9aaf3d94c24c50e80"
+};
 
-<div class="card">
-<input id="search" class="input" placeholder="🔍 Buscar equipo o falla...">
-<div style="display:flex;gap:6px;flex-wrap:wrap;margin:10px 0">
-<button class="chip active" data-f="all">Todas</button><button class="chip" data-f="todo">Pendientes</button><button class="chip" data-f="vencida">Vencidas</button><button class="chip" data-f="preventivo">Preventivo</button><button class="chip" data-f="correctivo">Correctivo</button>
-</div>
-<div class="stats"><div class="stat"><b id="total">0</b><span>Total</span></div><div class="stat"><b id="pend">0</b><span>Pendientes</span></div><div class="stat"><b id="prev">0</b><span>Preventivo</span></div><div class="stat"><b id="corr">0</b><span>Correctivo</span></div></div>
-<div id="list"></div>
-</div>
-<p class="footer">Hecho por Hilda - Sistema de Mantenimiento PRO V3<br>Supera a miguel2352</p>
-</div>
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const provider = new GoogleAuthProvider();
 
-<script>
-let tasks=JSON.parse(localStorage.getItem('hilda-mant-pro')||'[]');
-let filter='all'; const $=s=>document.getElementById(s);
-function save(){localStorage.setItem('hilda-mant-pro',JSON.stringify(tasks))}
-function daysLeft(d){if(!d) return null; let a=new Date(); a.setHours(0,0,0,0); return Math.ceil((new Date(d)-a)/86400000)}
-async function fileToBase64(f){return new Promise(r=>{let rd=new FileReader(); rd.onload=()=>r(rd.result); rd.readAsDataURL(f)})}
-function render(){
- let q=$('search').value.toLowerCase();
- let arr=tasks.map((t,i)=>({...t,_i:i})).filter(t=>{
-  if(filter==='todo'&&t.done) return 0; if(filter==='vencida'&&!(daysLeft(t.date)<0&&!t.done)) return 0;
-  if(filter==='preventivo'&&t.tipo!=='preventivo') return 0; if(filter==='correctivo'&&t.tipo!=='correctivo') return 0;
-  if(q&&!(t.title.toLowerCase().includes(q)||(t.desc||'').toLowerCase().includes(q))) return 0; return 1;
- }).sort((a,b)=>{if(a.done!==b.done) return a.done?1:-1; let p={alta:0,media:1,baja:2}; if(p[a.prio]!==p[b.prio]) return p[a.prio]-p[b.prio]; return 0});
- let h=''; arr.forEach(t=>{
-  let dl=daysLeft(t.date); let venc=dl!==null&&dl<0&&!t.done;
-  h+=`<div class="task ${t.tipo} ${venc?'vencida':''} ${t.done?'done':''}" style="opacity:${t.done?.5:1}"><input type="checkbox" ${t.done?'checked':''} onchange="toggle(${t._i})" style="margin-top:4px"><div class="t"><div class="t-title">${t.title}</div><div class="t-desc">${t.desc||''}</div>${t.img?`<img src="${t.img}" class="img-prev">`:''}<div class="t-meta"><span class="badge" style="background:${t.tipo==='preventivo'?'#10b981':'#ef4444'}">${t.tipo.toUpperCase()}</span><span class="badge" style="background:#334155">${t.cat}</span><span>${t.date||'Sin fecha'}${dl!==null?(venc?` ⚠️ ${Math.abs(dl)}d atraso`:` (${dl}d)`):''}</span><span>${t.prio.toUpperCase()}</span>${t.rec?`<span>🔁 ${t.rec}d</span>`:''}</div></div><button class="del" onclick="del(${t._i})">✕</button></div>`
- });
- $('list').innerHTML=h||'<p style="text-align:center;color:var(--muted);padding:20px">Sin tareas</p>';
- $('total').textContent=tasks.length; $('pend').textContent=tasks.filter(t=>!t.done).length; $('prev').textContent=tasks.filter(t=>t.tipo==='preventivo').length; $('corr').textContent=tasks.filter(t=>t.tipo==='correctivo').length;
+let currentUser = null;
+let unsubscribe = null;
+
+window.loginGoogle = async () => {
+  try { await signInWithPopup(auth, provider); } catch(e){ alert(e.message); }
 }
-window.toggle=i=>{
- if(!tasks[i].done && tasks[i].rec){ let d=new Date(); d.setDate(d.getDate()+parseInt(tasks[i].rec)); tasks.push({...tasks[i],date:d.toISOString().split('T')[0],done:false})}
- tasks[i].done=!tasks[i].done; save(); render();
+window.loginEmail = async () => {
+  const email = document.getElementById('email').value;
+  const pass = document.getElementById('password').value;
+  if(!email || !pass) return alert('Pon correo y contraseña');
+  try { await signInWithEmailAndPassword(auth, email, pass); } 
+  catch(e){
+    if(e.code==='auth/user-not-found' || e.code==='auth/invalid-credential'){
+      try{ await createUserWithEmailAndPassword(auth, email, pass); } catch(er){ alert(er.message); }
+    } else { alert(e.message); }
+  }
 }
-window.del=i=>{if(confirm('¿Borrar?')){tasks.splice(i,1);save();render()}}
-$('addBtn').onclick=async()=>{
- let title=$('title').value.trim(); if(!title) return alert('Pon título');
- let img=''; if($('foto').files[0]) img=await fileToBase64($('foto').files[0]);
- tasks.unshift({title,desc:$('desc').value,tipo:$('tipo').value,cat:$('cat').value,prio:$('prio').value,date:$('date').value,rec:$('rec').value,img,done:false,created:new Date().toLocaleString()});
- $('title').value=''; $('desc').value=''; $('foto').value=''; save(); render();
+window.logout = () => signOut(auth);
+
+onAuthStateChanged(auth, (user) => {
+  currentUser = user;
+  if(user){
+    document.getElementById('loginScreen').classList.add('hidden');
+    document.getElementById('appScreen').classList.remove('hidden');
+    document.getElementById('userEmail').innerText = user.email;
+    document.getElementById('userPhoto').src = user.photoURL || 'https://ui-avatars.com/api/?name='+user.email;
+    loadTasks();
+  } else {
+    document.getElementById('loginScreen').classList.remove('hidden');
+    document.getElementById('appScreen').classList.add('hidden');
+    if(unsubscribe) unsubscribe();
+  }
+});
+
+function loadTasks(){
+  const q = query(collection(db, "tareas"), where("uid", "==", currentUser.uid), orderBy("creado", "desc"));
+  unsubscribe = onSnapshot(q, (snap)=>{
+    const lista = document.getElementById('lista');
+    lista.innerHTML = '';
+    let pendientes=0, hechas=0;
+    snap.forEach((d)=>{
+      const t = d.data();
+      if(t.completada) hechas++; else pendientes++;
+      const li = document.createElement('div');
+      li.className = `p-4 bg-white rounded-xl shadow flex justify-between items-center mb-3 border-l-4 ${t.completada ? 'border-green-500 opacity-70' : t.prioridad==='alta' ? 'border-red-500' : t.prioridad==='media' ? 'border-yellow-400' : 'border-blue-400'}`;
+      li.innerHTML = `
+        <div class="flex-1">
+          <div class="flex items-center gap-2">
+            <input type="checkbox" ${t.completada?'checked':''} onchange="toggleTask('${d.id}', ${!t.completada})" class="h-5 w-5">
+            <span class="font-semibold ${t.completada?'line-through text-gray-400':''}">${t.titulo}</span>
+            <span class="text-xs px-2 py-1 rounded-full ${t.prioridad==='alta'?'bg-red-100 text-red-600': t.prioridad==='media'?'bg-yellow-100 text-yellow-600':'bg-blue-100 text-blue-600'}">${t.prioridad}</span>
+          </div>
+          <p class="text-sm text-gray-500 ml-7">${t.descripcion||''} - ${t.area||'General'}</p>
+        </div>
+        <button onclick="deleteTask('${d.id}')" class="text-red-400 hover:text-red-600 ml-3">🗑️</button>
+      `;
+      lista.appendChild(li);
+    });
+    document.getElementById('countPend').innerText = pendientes;
+    document.getElementById('countHechas').innerText = hechas;
+    document.getElementById('countTotal').innerText = pendientes+hechas;
+  });
 }
-document.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{document.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));c.classList.add('active');filter=c.dataset.f;render()});
-$('search').oninput=render;
-$('themeBtn').onclick=()=>{document.body.classList.toggle('light');localStorage.setItem('theme',document.body.classList.contains('light')?'light':'dark')}
-$('pdfBtn').onclick=()=>{
- let w=window.open('','','width=800,height=600'); let rows=tasks.map(t=>`<tr><td>${t.title}</td><td>${t.tipo}</td><td>${t.cat}</td><td>${t.date||''}</td><td>${t.done?'HECHA':'PENDIENTE'}</td><td>${t.desc||''}</td></tr>`).join('');
- w.document.write(`<h2>Reporte Mantenimiento - Hilda</h2><p>${new Date().toLocaleString()}</p><table border=1 cellpadding=6 cellspacing=0 style="width:100%;font-size:12px"><tr><th>Tarea</th><th>Tipo</th><th>Cat</th><th>Fecha</th><th>Estado</th><th>Notas</th></tr>${rows}</table>`);
- w.document.close(); w.print();
+
+window.addTask = async () => {
+  const titulo = document.getElementById('titulo').value.trim();
+  if(!titulo) return alert('Escribe la tarea');
+  const descripcion = document.getElementById('descripcion').value;
+  const area = document.getElementById('area').value;
+  const prioridad = document.getElementById('prioridad').value;
+  await addDoc(collection(db, "tareas"), {
+    uid: currentUser.uid,
+    titulo, descripcion, area, prioridad,
+    completada: false,
+    creado: serverTimestamp()
+  });
+  document.getElementById('titulo').value=''; document.getElementById('descripcion').value='';
 }
-if(localStorage.getItem('theme')==='light'){document.body.classList.add('light')}
-render();
+
+window.toggleTask = async (id, val) => {
+  await updateDoc(doc(db, "tareas", id), { completada: val });
+}
+window.deleteTask = async (id) => {
+  if(confirm('¿Borrar tarea?')) await deleteDoc(doc(db, "tareas", id));
+}
 </script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+<div id="loginScreen" class="min-h-screen flex items-center justify-center p-4">
+  <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md">
+    <h1 class="text-3xl font-bold text-center text-blue-700">Mantenimiento PRO</h1>
+    <p class="text-center text-gray-500 mb-6">ISIC - ToDo List Profesional</p>
+    <input id="email" type="email" placeholder="Correo" class="w-full p-3 border rounded-lg mb-3">
+    <input id="password" type="password" placeholder="Contraseña (6+ caracteres)" class="w-full p-3 border rounded-lg mb-4">
+    <button onclick="loginEmail()" class="w-full bg-blue-600 text-white p-3 rounded-lg font-bold mb-3">Entrar / Registrarse</button>
+    <div class="text-center text-gray-400 my-2">— o —</div>
+    <button onclick="loginGoogle()" class="w-full border p-3 rounded-lg flex items-center justify-center gap-2"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-5"> Continuar con Google</button>
+  </div>
+</div>
+<div id="appScreen" class="hidden">
+  <header class="bg-blue-700 text-white p-4 flex justify-between items-center">
+    <div class="flex items-center gap-3">
+      <img id="userPhoto" class="w-10 h-10 rounded-full bg-white">
+      <div><p id="userEmail" class="font-bold text-sm"></p><p class="text-xs opacity-80">Técnico Conectado</p></div>
+    </div>
+    <button onclick="logout()" class="bg-blue-800 px-4 py-2 rounded-lg text-sm">Salir</button>
+  </header>
+  <div class="max-w-4xl mx-auto p-4">
+    <div class="grid grid-cols-3 gap-3 mb-6">
+      <div class="bg-white p-4 rounded-xl text-center shadow"><p class="text-2xl font-bold text-blue-600" id="countTotal">0</p><p class="text-xs">Total</p></div>
+      <div class="bg-white p-4 rounded-xl text-center shadow"><p class="text-2xl font-bold text-orange-500" id="countPend">0</p><p class="text-xs">Pendientes</p></div>
+      <div class="bg-white p-4 rounded-xl text-center shadow"><p class="text-2xl font-bold text-green-500" id="countHechas">0</p><p class="text-xs">Completadas</p></div>
+    </div>
+    <div class="bg-white p-5 rounded-2xl shadow mb-6">
+      <h2 class="font-bold mb-3">+ Nueva Tarea de Mantenimiento</h2>
+      <div class="grid md:grid-cols-2 gap-3">
+        <input id="titulo" placeholder="Ej: Revisar bomba de agua P-01" class="p-3 border rounded-lg col-span-2">
+        <input id="descripcion" placeholder="Descripción / Herramientas" class="p-3 border rounded-lg">
+        <select id="area" class="p-3 border rounded-lg"><option>General</option><option>Electricidad</option><option>Plomería</option><option>Climatización</option><option>Preventivo</option><option>Correctivo</option></select>
+        <select id="prioridad" class="p-3 border rounded-lg"><option value="baja">Prioridad Baja</option><option value="media" selected>Prioridad Media</option><option value="alta">Prioridad Alta 🔥</option></select>
+        <button onclick="addTask()" class="bg-blue-600 text-white p-3 rounded-lg font-bold">Guardar Tarea en la Nube</button>
+      </div>
+    </div>
+    <div id="lista"></div>
+  </div>
+</div>
 </body>
 </html>

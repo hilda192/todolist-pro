@@ -3,152 +3,133 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mantenimiento PRO - ToDoList</title>
-<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<title>Mantenimiento PRO - Hilda</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gradient-to-br from-slate-900 to-blue-900 min-h-screen text-white">
+<div id="login-screen" class="min-h-screen flex items-center justify-center p-4">
+  <div class="bg-white text-gray-800 p-8 rounded-2xl shadow-2xl w-full max-w-md">
+    <h1 class="text-3xl font-bold text-center mb-2 text-blue-600"><i class="fas fa-tools"></i> Mantenimiento PRO</h1>
+    <p class="text-center text-gray-500 mb-6">By Hilda - ISIC</p>
+    <input id="email" type="email" placeholder="Correo" class="w-full p-3 border rounded-lg mb-3">
+    <input id="password" type="password" placeholder="Contraseña (6 letras)" class="w-full p-3 border rounded-lg mb-4">
+    <button onclick="login()" class="w-full bg-blue-600 text-white p-3 rounded-lg font-bold">Entrar / Registrarse</button>
+    <p id="login-error" class="text-red-500 text-sm mt-3 text-center"></p>
+  </div>
+</div>
+
+<div id="app-screen" class="hidden">
+  <header class="bg-white/10 backdrop-blur p-4 flex justify-between items-center">
+    <h1 class="font-bold text-xl"><i class="fas fa-list-check"></i> Mis Tareas</h1>
+    <div><span id="user-email" class="text-sm mr-3"></span><button onclick="logout()" class="bg-red-500 px-4 py-2 rounded-lg text-sm">Salir</button></div>
+  </header>
+  <main class="p-4 max-w-2xl mx-auto">
+    <div class="bg-white text-gray-800 p-5 rounded-2xl mb-6">
+      <h2 class="font-bold mb-3">Nueva Tarea</h2>
+      <input id="titulo" placeholder="Ej: Programar bomba" class="w-full p-3 border rounded-lg mb-2">
+      <textarea id="descripcion" placeholder="Descripción" class="w-full p-3 border rounded-lg mb-2"></textarea>
+      <div class="flex gap-2 mb-3">
+        <select id="area" class="flex-1 p-3 border rounded-lg"><option>Preventivo</option><option>Correctivo</option><option>Eléctrico</option><option>Mecánico</option></select>
+        <select id="prioridad" class="flex-1 p-3 border rounded-lg"><option value="alta">Alta</option><option value="media">Media</option><option value="baja">Baja</option></select>
+      </div>
+      <button onclick="guardarTarea()" class="w-full bg-green-600 text-white p-3 rounded-lg font-bold">Guardar en la Nube <i class="fas fa-cloud"></i></button>
+      <p id="save-status" class="text-center text-sm mt-2"></p>
+    </div>
+    <div id="lista-tareas" class="space-y-3"></div>
+  </main>
+</div>
+
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc, query, where, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore, collection, addDoc, onSnapshot, query, where, deleteDoc, doc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAYr6gWLwirpYIvHDccIhWLifz3bk7WHl8",
+  apiKey: "AIzaSyCqP5V7p2p7p7p7p7p7p7p7",
+  authDomain: "mantenimiento--pro.firebaseapp.com",
+  projectId: "mantenimiento--pro",
+  storageBucket: "mantenimiento--pro.appspot.com",
+  messagingSenderId: "123456789",
+  appId: "1:123456789:web:abcdef"
+};
+
+// Tu config real - pegala de Firebase > Configuracion del proyecto > General
+const realConfig = {
+  apiKey: "AIzaSyA3Z7hW2y7X8Ql9p0r1s2t3u4v5w6x7y8z9",
   authDomain: "mantenimiento--pro.firebaseapp.com",
   projectId: "mantenimiento--pro",
   storageBucket: "mantenimiento--pro.firebasestorage.app",
-  messagingSenderId: "954410177409",
-  appId: "1:954410177409:web:83bba9aaf3d94c24c50e80"
+  messagingSenderId: "1081234567890",
+  appId: "1:1081234567890:web:abcd1234efgh5678"
 };
 
-const app = initializeApp(firebaseConfig);
+const app = initializeApp(realConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-const provider = new GoogleAuthProvider();
 
-let currentUser = null;
-let unsubscribe = null;
-
-window.loginGoogle = async () => {
-  try { await signInWithPopup(auth, provider); } catch(e){ alert(e.message); }
-}
-window.loginEmail = async () => {
+window.login = async () => {
   const email = document.getElementById('email').value;
   const pass = document.getElementById('password').value;
-  if(!email || !pass) return alert('Pon correo y contraseña');
+  const errEl = document.getElementById('login-error');
   try { await signInWithEmailAndPassword(auth, email, pass); } 
-  catch(e){
-    if(e.code==='auth/user-not-found' || e.code==='auth/invalid-credential'){
-      try{ await createUserWithEmailAndPassword(auth, email, pass); } catch(er){ alert(er.message); }
-    } else { alert(e.message); }
+  catch (e) { 
+    try { await createUserWithEmailAndPassword(auth, email, pass); }
+    catch (e2) { errEl.textContent = e2.message; }
   }
 }
 window.logout = () => signOut(auth);
 
 onAuthStateChanged(auth, (user) => {
-  currentUser = user;
-  if(user){
-    document.getElementById('loginScreen').classList.add('hidden');
-    document.getElementById('appScreen').classList.remove('hidden');
-    document.getElementById('userEmail').innerText = user.email;
-    document.getElementById('userPhoto').src = user.photoURL || 'https://ui-avatars.com/api/?name='+user.email;
-    loadTasks();
+  if (user) {
+    document.getElementById('login-screen').classList.add('hidden');
+    document.getElementById('app-screen').classList.remove('hidden');
+    document.getElementById('user-email').textContent = user.email;
+    cargarTareas(user);
   } else {
-    document.getElementById('loginScreen').classList.remove('hidden');
-    document.getElementById('appScreen').classList.add('hidden');
-    if(unsubscribe) unsubscribe();
+    document.getElementById('login-screen').classList.remove('hidden');
+    document.getElementById('app-screen').classList.add('hidden');
   }
 });
 
-function loadTasks(){
-  const q = query(collection(db, "tareas"), where("uid", "==", currentUser.uid), orderBy("creado", "desc"));
-  unsubscribe = onSnapshot(q, (snap)=>{
-    const lista = document.getElementById('lista');
-    lista.innerHTML = '';
-    let pendientes=0, hechas=0;
-    snap.forEach((d)=>{
-      const t = d.data();
-      if(t.completada) hechas++; else pendientes++;
-      const li = document.createElement('div');
-      li.className = `p-4 bg-white rounded-xl shadow flex justify-between items-center mb-3 border-l-4 ${t.completada ? 'border-green-500 opacity-70' : t.prioridad==='alta' ? 'border-red-500' : t.prioridad==='media' ? 'border-yellow-400' : 'border-blue-400'}`;
-      li.innerHTML = `
-        <div class="flex-1">
-          <div class="flex items-center gap-2">
-            <input type="checkbox" ${t.completada?'checked':''} onchange="toggleTask('${d.id}', ${!t.completada})" class="h-5 w-5">
-            <span class="font-semibold ${t.completada?'line-through text-gray-400':''}">${t.titulo}</span>
-            <span class="text-xs px-2 py-1 rounded-full ${t.prioridad==='alta'?'bg-red-100 text-red-600': t.prioridad==='media'?'bg-yellow-100 text-yellow-600':'bg-blue-100 text-blue-600'}">${t.prioridad}</span>
-          </div>
-          <p class="text-sm text-gray-500 ml-7">${t.descripcion||''} - ${t.area||'General'}</p>
-        </div>
-        <button onclick="deleteTask('${d.id}')" class="text-red-400 hover:text-red-600 ml-3">🗑️</button>
-      `;
-      lista.appendChild(li);
-    });
-    document.getElementById('countPend').innerText = pendientes;
-    document.getElementById('countHechas').innerText = hechas;
-    document.getElementById('countTotal').innerText = pendientes+hechas;
-  });
-}
-
-window.addTask = async () => {
-  const titulo = document.getElementById('titulo').value.trim();
-  if(!titulo) return alert('Escribe la tarea');
-  const descripcion = document.getElementById('descripcion').value;
-  const area = document.getElementById('area').value;
-  const prioridad = document.getElementById('prioridad').value;
-  await addDoc(collection(db, "tareas"), {
-    uid: currentUser.uid,
-    titulo, descripcion, area, prioridad,
-    completada: false,
-    creado: serverTimestamp()
-  });
-  document.getElementById('titulo').value=''; document.getElementById('descripcion').value='';
-}
-
-window.toggleTask = async (id, val) => {
-  await updateDoc(doc(db, "tareas", id), { completada: val });
-}
-window.deleteTask = async (id) => {
-  if(confirm('¿Borrar tarea?')) await deleteDoc(doc(db, "tareas", id));
-}
-</script>
-</head>
-<body class="bg-gray-100 min-h-screen">
-<div id="loginScreen" class="min-h-screen flex items-center justify-center p-4">
-  <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md">
-    <h1 class="text-3xl font-bold text-center text-blue-700">Mantenimiento PRO</h1>
-    <p class="text-center text-gray-500 mb-6">ISIC - ToDo List Profesional</p>
-    <input id="email" type="email" placeholder="Correo" class="w-full p-3 border rounded-lg mb-3">
-    <input id="password" type="password" placeholder="Contraseña (6+ caracteres)" class="w-full p-3 border rounded-lg mb-4">
-    <button onclick="loginEmail()" class="w-full bg-blue-600 text-white p-3 rounded-lg font-bold mb-3">Entrar / Registrarse</button>
-    <div class="text-center text-gray-400 my-2">— o —</div>
-    <button onclick="loginGoogle()" class="w-full border p-3 rounded-lg flex items-center justify-center gap-2"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-5"> Continuar con Google</button>
-  </div>
-</div>
-<div id="appScreen" class="hidden">
-  <header class="bg-blue-700 text-white p-4 flex justify-between items-center">
-    <div class="flex items-center gap-3">
-      <img id="userPhoto" class="w-10 h-10 rounded-full bg-white">
-      <div><p id="userEmail" class="font-bold text-sm"></p><p class="text-xs opacity-80">Técnico Conectado</p></div>
-    </div>
-    <button onclick="logout()" class="bg-blue-800 px-4 py-2 rounded-lg text-sm">Salir</button>
-  </header>
-  <div class="max-w-4xl mx-auto p-4">
-    <div class="grid grid-cols-3 gap-3 mb-6">
-      <div class="bg-white p-4 rounded-xl text-center shadow"><p class="text-2xl font-bold text-blue-600" id="countTotal">0</p><p class="text-xs">Total</p></div>
-      <div class="bg-white p-4 rounded-xl text-center shadow"><p class="text-2xl font-bold text-orange-500" id="countPend">0</p><p class="text-xs">Pendientes</p></div>
-      <div class="bg-white p-4 rounded-xl text-center shadow"><p class="text-2xl font-bold text-green-500" id="countHechas">0</p><p class="text-xs">Completadas</p></div>
-    </div>
-    <div class="bg-white p-5 rounded-2xl shadow mb-6">
-      <h2 class="font-bold mb-3">+ Nueva Tarea de Mantenimiento</h2>
-      <div class="grid md:grid-cols-2 gap-3">
-        <input id="titulo" placeholder="Ej: Revisar bomba de agua P-01" class="p-3 border rounded-lg col-span-2">
-        <input id="descripcion" placeholder="Descripción / Herramientas" class="p-3 border rounded-lg">
-        <select id="area" class="p-3 border rounded-lg"><option>General</option><option>Electricidad</option><option>Plomería</option><option>Climatización</option><option>Preventivo</option><option>Correctivo</option></select>
-        <select id="prioridad" class="p-3 border rounded-lg"><option value="baja">Prioridad Baja</option><option value="media" selected>Prioridad Media</option><option value="alta">Prioridad Alta 🔥</option></select>
-        <button onclick="addTask()" class="bg-blue-600 text-white p-3 rounded-lg font-bold">Guardar Tarea en la Nube</button>
+function cargarTareas(user){
+  const q = query(collection(db, "tareas"), where("uid", "==", user.uid));
+  onSnapshot(q, (snap) => {
+    let tareas = [];
+    snap.forEach(d => tareas.push({id: d.id, ...d.data()}));
+    tareas.sort((a,b) => (b.creado?.seconds||0) - (a.creado?.seconds||0));
+    const lista = document.getElementById('lista-tareas');
+    if(tareas.length==0){ lista.innerHTML = "<p class='text-center opacity-70'>No hay tareas aún</p>"; return; }
+    lista.innerHTML = tareas.map(t => `
+      <div class="bg-white text-gray-800 p-4 rounded-xl flex justify-between items-start">
+        <div><h3 class="font-bold ${t.completada?'line-through':''}">${t.titulo}</h3><p class="text-sm text-gray-500">${t.descripcion||''}</p><span class="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded">${t.area} - ${t.prioridad}</span></div>
+        <div class="flex gap-2"><button onclick="toggle('${t.id}', ${!t.completada})" class="bg-green-100 p-2 rounded"><i class="fas fa-check"></i></button><button onclick="borrar('${t.id}')" class="bg-red-100 p-2 rounded"><i class="fas fa-trash"></i></button></div>
       </div>
-    </div>
-    <div id="lista"></div>
-  </div>
-</div>
+    `).join('');
+  }, (error) => { console.error(error); document.getElementById('lista-tareas').innerHTML = "Error: "+error.message; });
+}
+
+window.guardarTarea = async () => {
+  const user = auth.currentUser;
+  const titulo = document.getElementById('titulo').value;
+  if(!titulo) return alert("Escribe un titulo");
+  try {
+    await addDoc(collection(db, "tareas"), {
+      uid: user.uid,
+      titulo: titulo,
+      descripcion: document.getElementById('descripcion').value,
+      area: document.getElementById('area').value,
+      prioridad: document.getElementById('prioridad').value,
+      completada: false,
+      creado: serverTimestamp()
+    });
+    document.getElementById('titulo').value = ""; document.getElementById('descripcion').value = "";
+    document.getElementById('save-status').textContent = "¡Guardado en la nube! ✅";
+    setTimeout(()=>document.getElementById('save-status').textContent="", 2000);
+  } catch(e){ alert("Error al guardar: "+e.message); }
+}
+window.borrar = async (id) => { if(confirm("¿Borrar?")) await deleteDoc(doc(db, "tareas", id)); }
+window.toggle = async (id, val) => { await updateDoc(doc(db, "tareas", id), {completada: val}); }
+</script>
 </body>
 </html>
